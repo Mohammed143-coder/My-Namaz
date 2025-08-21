@@ -5,9 +5,11 @@ import { TiArrowBackOutline } from "react-icons/ti";
 const ExplorerLayout = () => {
   const router = useRouter();
   return (
-    <main className="flex text-black p-3 ">
-      <TiArrowBackOutline onClick={() => router.push("/")} className="w-5 h-5"/>
+    <main className=" text-black p-3 ">
+      <header className="flex">
+        <TiArrowBackOutline onClick={() => router.push("/")} className="w-7 h-7"/>
         <div className="w-full text-center">exploring</div>
+      </header>
     </main>
   );
 };

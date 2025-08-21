@@ -9,8 +9,8 @@ import { FaQuran } from "react-icons/fa";
 const Footer = () => {
     const router = useRouter();
   return (
-    <section className="bottom-0 text-black border-t">
-      <div className=" flex justify-between mb-4 mx-2 p-2">
+    <section className="w-full bg-white fixed bottom-0 text-black border-t shadow-lg md:border-t-0 rounded-md">
+      <div className=" flex justify-between mb-3 mx-2 p-2">
         {" "}
         <IoHomeOutline title="Home" className="w-7 h-7 font-bold md:hidden" 
         onClick={() => router.push("/")} 
@@ -21,7 +21,7 @@ const Footer = () => {
         onClick={() => router.push("/hadith")}
         />
       </div>
-      <div></div>
+      
     </section>
   );
 };

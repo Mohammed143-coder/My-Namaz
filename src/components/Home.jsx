@@ -116,24 +116,23 @@ const Home = () => {
           All Masjids (Krishnagiri)
         </h5>
         <div className="p-1 ">
-          {filterMasjids.length>0 ? (filterMasjids.splice(0, 5).map((item, index) => (
-            <div
-              key={index}
-              className="flex items-center text-black gap-4 border border-gray-400 my-1 rounded-lg p-1"
-            >
-              <div className="bg-gray-300 rounded-lg shadow-xl p-1">
-                {item.icon}
+          {filterMasjids.length > 0 ? (
+            filterMasjids.splice(0, 5).map((item, index) => (
+              <div
+                key={index}
+                className="flex items-center text-black gap-4 border border-gray-400 my-1 rounded-lg p-1"
+              >
+                <div className="bg-gray-300 rounded-lg shadow-xl p-1">
+                  {item.icon}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span>{item.name}</span>
+                  <span>{item.location.substring(0, 15)}</span>
+                </div>
               </div>
-              <div className="flex flex-col gap-1">
-                <span>{item.name}</span>
-                <span>{item.location.substring(0, 15)}</span>
-              </div>
-            </div>
-          ))
+            ))
           ) : (
-            <div className="text-center text-gray-500">
-              No masjids found.
-            </div>
+            <div className="text-center text-gray-500">No masjids found.</div>
           )}
         </div>
       </div>

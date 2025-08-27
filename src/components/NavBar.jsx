@@ -12,8 +12,8 @@ const NavBar = () => {
 
   const tabs = [
     { label: "User", href: "/" },
-    { label: "Admin Panel", href: "/checkIn" },
-    { label: "Developer", href: "/checkIn" },
+    { label: "Admin Panel", href: "/signup" },
+    { label: "Developer", href: "/login" },
   ];
   return (
     <section className="text-black fixed top-0 left-0 right-0 z-20 bg-white md:shadow md:rounded-xl md:border-b">

@@ -3,27 +3,30 @@ import { useRouter } from "next/navigation";
 import { FaMosque } from "react-icons/fa";
 
 import CommonHeader from "./CommonHeader";
+import Link from "next/link";
 
 const Hadith = () => {
   const router = useRouter();
-  const englishQuotes = [
-    {
-      language: "English",
-      quote:
-        "The best among you are those who have the best manners and character. - Prophet Muhammad (peace be upon him)",
-      reflection:
-        "Reflect on this Hadith and strive to embody good character in your daily life.",
-    },
-  ];
-  const urduQuotes = [
-    {
-      language: "Urdu",
-      quote:
-        "تم میں سے بہترین وہ ہیں جن کے اخلاق اور کردار سب سے بہتر ہیں۔ - حضرت محمد ﷺ",
-      reflection:
-        "اس حدیث پر غور کریں اور اپنی روزمرہ زندگی میں اچھے کردار کو اپنانے کی کوشش کریں۔",
-    },
-  ];
+const englishQuotes = [
+  {
+    language: "English",
+    quote:
+      "The strongest among you is the one who controls his anger. - Prophet Muhammad (peace be upon him)",
+    reflection:
+      "True strength is not physical, but the ability to remain calm and patient when angry.",
+  },
+];
+
+const urduQuotes = [
+  {
+    language: "Urdu",
+    quote:
+      "تم میں سب سے زیادہ طاقتور وہ ہے جو غصے کے وقت اپنے آپ پر قابو رکھے۔ - حضرت محمد ﷺ",
+    reflection:
+      "اصل طاقت جسمانی نہیں بلکہ غصے کے وقت صبر اور سکون اختیار کرنا ہے۔",
+  },
+];
+
 
   return (
     <section className=" text-black p-3 md:text-center">
@@ -54,6 +57,12 @@ const Hadith = () => {
       >
         <FaMosque className="w-10 h-10 " />
       </div>
+      <div className="mt-16 text-center">
+          <Link href='https://junaith-portfolio.vercel.app' target='_blank' className="w-full text-gray-400 text-sm font-medium">
+        Crafted ❤️ By Umath-e-Nabi
+      </Link>
+      </div>
+    
     </section>
   );
 };

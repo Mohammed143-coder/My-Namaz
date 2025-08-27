@@ -95,7 +95,7 @@ const Home = () => {
           Favorites <GrFavorite className="w-4 h-4" />
         </h5>
         <div className="p-1">
-          {favoriteMasjids.map((item, index) => (
+          {favoriteMasjids.slice(0,2).map((item, index) => (
             <div
               key={index}
               className="flex items-center text-black text-base gap-4 border border-gray-400 my-1 rounded-lg p-1 "
@@ -117,7 +117,7 @@ const Home = () => {
         </h5>
         <div className="p-1 ">
           {filterMasjids.length > 0 ? (
-            filterMasjids.splice(0, 5).map((item, index) => (
+            filterMasjids.slice(0, 5).map((item, index) => (
               <div
                 key={index}
                 className="flex items-center text-black gap-4 border border-gray-400 my-1 rounded-lg p-1"

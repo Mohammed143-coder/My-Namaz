@@ -64,7 +64,7 @@ export const POST = async (req) => {
     response.cookies.set("authToken", token, {
       httpOnly: true, // Security: prevents XSS attacks
       // sameSite: "lax", // CSRF protection
-      maxAge: 3600, // 1 hour in seconds (not "1h" string)
+      maxAge: 10800, // 1 hour in seconds (not "1h" string)
       path: "/", // Available on all routes
     });
 

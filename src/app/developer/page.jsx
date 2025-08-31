@@ -1,14 +1,21 @@
-"use client";
-import CommonHeader from "@/components/CommonHeader";
-import { useRouter } from "next/navigation";
-import { TiArrowBackOutline } from "react-icons/ti";
+// app/developer/page.tsx
+import { cookies } from "next/headers";
+import DeveloperClient from "@/components/DeveloperClient";
+import jwt from "jsonwebtoken"; // or jose if you prefer
 
-const Developer = () => {
-  return (
-    <div className="bg-white p-2 h-screen text-black">
-      <CommonHeader>Developer Page</CommonHeader>
-    </div>
-  );
-};
+export default async function Developer() {
+  const cookieStore = await cookies();
 
-export default Developer;
+  const token = cookieStore?.get("authToken")?.value;
+
+  let decodedUser = null;
+  if (token) {
+    try {
+      decodedUser = jwt.verify(token, process.env.JWT_KEY); // verify on server
+    } catch (err) {
+      console.error("Invalid token:", err.message);
+    }
+  }
+
+  return <DeveloperClient user={decodedUser} />;
+}

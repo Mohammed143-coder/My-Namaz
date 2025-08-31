@@ -4,17 +4,28 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaMosque } from "react-icons/fa";
 import { LuListTree } from "react-icons/lu";
+import { useSelector } from "react-redux";
 
 const NavBar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [openModel, setOpenModel] = useState(false);
-
+  const loggedIn = useSelector((state) => state.auth.isLoggedIn);
   const tabs = [
     { label: "User", href: "/" },
-    { label: "Admin Panel", href: "/signup" },
-    { label: "Developer", href: "/login" },
+    { label: "Admin Panel", href: "/admin" },
+    { label: "Developer", href: "/developer" },
   ];
+  const handleNavClick = (href) => {
+    if (!loggedIn && (href === "/admin" || href === "/developer")) {
+      // User not logged in -> send them to login
+      router.push("/login");
+    } else {
+      // User is logged in -> allow normal navigation
+      router.push(href);
+    }
+  };
+
   return (
     <section className="text-black fixed top-0 left-0 right-0 z-20 bg-white md:shadow md:rounded-xl md:border-b">
       <nav className="hidden md:block md:flex items-center justify-between gap-2 md:mx-4 p-3 ">
@@ -27,7 +38,7 @@ const NavBar = () => {
           {tabs.map((tab) => (
             <span
               key={tab.label}
-              onClick={() => router.push(tab.href)}
+              onClick={() => handleNavClick(tab.href)}
               className={`font-medium cursor-pointer px-1 py-0.5 rounded-md transition 
             ${
               pathname === tab.href

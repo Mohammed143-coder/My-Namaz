@@ -1,17 +1,16 @@
-import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
-import HomeLayout from "@/components/Home/Home";
-
+import HomeLayout from "@/components/Home/HomeMain";
 
 export default function Home() {
   return (
-   <section className="flex flex-col min-h-screen bg-white">
-  <main className="flex-grow overflow-y-auto">
-   <NavBar/>
-   <HomeLayout/>
-  </main>
+    <section className="flex flex-col min-h-screen bg-white">
+      {/* Full height container */}
+      <NavBar />
 
-</section>
-
+      {/* Make HomeLayout fill remaining height and control its own scrolls */}
+      <main className="flex-grow overflow-hidden">
+        <HomeLayout />
+      </main>
+    </section>
   );
 }

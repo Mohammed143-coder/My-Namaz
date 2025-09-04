@@ -1,48 +1,38 @@
 "use client";
 
-import selectedMasjid from "@/app/[id]/page";
+import Loading from "@/app/loading";
 import { selectedMasjidName } from "@/lib/userSlice/authSlice";
 import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { PiMosqueDuotone } from "react-icons/pi";
 import { useDispatch } from "react-redux";
+import useSWR from "swr";
 
-const MasjidList = ({searchMasjid}) => {
-  const dispatch =useDispatch();
-  const [masjids, setMasjids] = useState([]);
+const MasjidList = ({ searchMasjid }) => {
+  const dispatch = useDispatch();
+  const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-  const fetchMasjids = async () => {
-    try {
-      const res = await axios.get("/api/signUp");
-      if (!res.data.success) {
-        alert(res.data.message);
-      }
-      setMasjids(res.data.details);
-      console.log(res.data.details)
-      
-    } catch (error) {
-      console.error(error.message);
-      alert(error.message);
-    }
-  };
-  useEffect(() => {
-    fetchMasjids();
-  }, []);
-const filteredMasjids = masjids.filter(
+  const { data, error, isLoading, mutate } = useSWR("/api/user", fetcher, {
+    refreshInterval: 1000000, // re-fetch 
+    revalidateOnFocus: true, // re-fetch when window refocus
+    dedupingInterval: 200000,
+  });
+  // ✅ Ensure it's an array
+  const masjids = data?.details || [];
+  const filteredMasjids = masjids?.filter(
     (item) =>
       item.masjid.toLowerCase().includes(searchMasjid.toLowerCase()) ||
       item.masjidLocation.toLowerCase().includes(searchMasjid.toLowerCase())
   );
-
+if(isLoading) return <Loading/>
   return (
-    <div className="p-1 ">
+    <div className="p-2 overflow-y-auto">
       {filteredMasjids?.length > 0 ? (
-        filteredMasjids?.slice(0, 8)?.map((item) => (
+        filteredMasjids.slice(0, 8).map((item) => (
           <Link
             href={`/${item._id}`}
             key={item._id}
-            onClick={()=>dispatch(selectedMasjidName(item.masjid))}
+            onClick={() => dispatch(selectedMasjidName(item.masjid))}
             className="flex items-center text-black gap-4 border border-gray-400 my-1 rounded-lg p-1"
           >
             <div className="bg-gray-300 rounded-lg shadow-xl p-1">

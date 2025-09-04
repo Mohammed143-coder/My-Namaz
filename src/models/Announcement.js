@@ -4,7 +4,12 @@ const announcementSchema = new mongoose.Schema(
   {
     type: { type: String, default: "common" },
     message: { type: String, required: true },
-    expiresAt: { type: Date, required: true }, // <- Important for TTL
+    expiresAt: { type: Date,  default: () => new Date(Date.now() + 8 * 60 * 60 * 1000)}, // ✅ 8 hours later }, // <- Important for TTL
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "masjidUsers",
+      required: true,
+    },
   },
   { timestamps: true }
 );

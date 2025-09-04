@@ -6,7 +6,7 @@ import axios from "axios";
 
 const NamazTimingsForm = ({ User }) => {
   const prayers = ["Fajr", "Sunrise", "Zohar", "Asr", "Maghrib", "Isha"];
-
+  const [selected, setSelected] = useState("no");
   // Map frontend label → backend field
   const prayerMap = {
     Fajr: "fajr",
@@ -172,6 +172,18 @@ const NamazTimingsForm = ({ User }) => {
           onChange={(e) => setAnnouncement(e.target.value)}
           className="w-full border rounded px-2 py-2 bg-gray-100 outline-none"
         />
+        <div>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              checked={selected}
+              onClick={() => {console.log(selected)
+                setSelected(!selected)}} // toggle on/off
+              readOnly // prevents React warning
+            />
+            Important
+          </label>
+        </div>
         <button
           onClick={handleSaveAnnouncement}
           disabled={savingAnnouncement}

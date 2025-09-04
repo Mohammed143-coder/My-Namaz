@@ -5,7 +5,7 @@ import { TiArrowBackOutline } from "react-icons/ti";
 const CommonHeader = ({ children }) => {
   const router = useRouter();
   return (
-    <header className="flex">
+    <header className="flex ">
       <TiArrowBackOutline
         onClick={() => router.push("/")}
         className="w-7 h-7"

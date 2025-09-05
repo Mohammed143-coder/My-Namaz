@@ -25,7 +25,6 @@ export const POST = async (req) => {
         { status: 404 }
       );
     }
-
     // Compare password
     const userMatched = await bcrypt.compare(password, user.password);
     if (!userMatched) {
@@ -37,7 +36,6 @@ export const POST = async (req) => {
         { status: 401 }
       );
     }
-
     // Create JWT token
     const token = jwt.sign(
       {
@@ -48,7 +46,6 @@ export const POST = async (req) => {
       process.env.JWT_KEY,
       { expiresIn: "1h" } // Add expiration to JWT itself
     );
-
     // Create response
     const response = NextResponse.json({
       message: "User login successfully",

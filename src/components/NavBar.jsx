@@ -28,12 +28,12 @@ const NavBar = () => {
 
   return (
     <section className="text-black fixed top-0 left-0 right-0 z-20 bg-white md:shadow md:rounded-xl md:border-b">
-      <nav className="hidden md:block md:flex items-center justify-between gap-2 md:mx-4 p-3 ">
+      <nav className="hidden md:flex items-center justify-between gap-2 md:mx-4 p-3 ">
         <Link href="/">
           {" "}
           <FaMosque className="text-blue-500 w-8 h-8" />
         </Link>
-        <span className="text-lg text-blue-400 font-semibold">My Namaz</span>
+        <span className="text-lg text-blue-400 font-medium">My Namaz</span>
         <div className="p-1 rounded-md flex gap-2 border-2 border-gray-400 ">
           {tabs.map((tab) => (
             <span

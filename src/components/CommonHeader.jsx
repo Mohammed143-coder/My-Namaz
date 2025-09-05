@@ -5,15 +5,16 @@ import { TiArrowBackOutline } from "react-icons/ti";
 const CommonHeader = ({ children }) => {
   const router = useRouter();
   return (
-    <header className="flex ">
-      <TiArrowBackOutline
-        onClick={() => router.push("/")}
-        className="w-7 h-7"
-      />
-      <span className="w-full text-center text-lg text-blue-400 font-semibold">
-        {children}
-      </span>
-    </header>
+    <header className="flex items-center p-2 ">
+  <TiArrowBackOutline
+    onClick={() => router.push("/")}
+    className="w-6 h-6 cursor-pointer text-gray-700 hover:text-blue-400"
+  />
+  <span className="flex-1 text-center text-lg text-blue-500 font-semibold">
+    {children}
+  </span>
+</header>
+
   );
 };
 

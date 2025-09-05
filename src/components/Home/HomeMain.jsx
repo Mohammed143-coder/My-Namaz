@@ -45,7 +45,7 @@ const Home = () => {
       <div className="flex flex-col md:flex-row md:gap-3 flex-1 min-h-0 px-2">
         
         {/* Left column (Masjids) */}
-        <div className="md:w-[60%] flex flex-col gap-4 flex-1 min-h-0">
+        <div className="md:w-[60%] flex flex-col gap-2 flex-1 min-h-0">
           {/* Favorites (non-scrollable) */}
           <div className="m-1 flex-shrink-0">
             <h5 className="ml-2 flex items-center gap-1 mt-2 font-medium text-black">
@@ -72,7 +72,7 @@ const Home = () => {
           </div>
 
           {/* All Masjids (scrollable list) */}
-          <div className="my-1 mx-2 flex-1 min-h-0 flex flex-col border md:border-0 rounded-lg">
+          <div className="my-1 mx-2 flex-1 min-h-0 max-h-[35vh] flex flex-col border border-gray-400 md:border-0 rounded-lg">
             <h5 className="ml-2 mt-1 font-medium text-black flex-shrink-0 py-1">
               All Masjids (Krishnagiri)
             </h5>
@@ -83,11 +83,11 @@ const Home = () => {
         </div>
 
         {/* Right column (Announcements - scrollable) */}
-        <div className="md:w-[40%] m-2 flex flex-col flex-1 min-h-0 border border-gray-400 shadow rounded-lg">
+        <div className="md:w-[40%] m-2 mb-4 flex flex-col flex-1 min-h-0 max-h-[40vh] md:max-h-[87vh] border border-gray-400 shadow rounded-lg">
            <h5 className="ml-2 mt-1 font-medium text-black flex-shrink-0 py-1">
               Announcement (Krishnagiri)
             </h5>
-          <div className="flex-1 overflow-y-auto  min-h-0 mb-2">
+          <div className="flex-1 overflow-y-auto  min-h-0 mb-4">
             <Announcement />
           </div>
         </div>

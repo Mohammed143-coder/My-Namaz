@@ -1,4 +1,4 @@
-import ExplorerLayout from "@/components/ExplorerLayout"
+import ExplorerLayout from "@/components/FavoriteLayout"
 
 const Explorer = () => {
   return (

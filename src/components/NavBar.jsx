@@ -43,7 +43,7 @@ const NavBar = () => {
             ${
               pathname === tab.href
                 ? "bg-black text-white"
-                : "hover:bg-gray-200 hover:text-gray-500 text-gray-500"
+                : "hover:bg-blue-100 hover:text-gray-500 text-gray-500"
             }
           `}
             >

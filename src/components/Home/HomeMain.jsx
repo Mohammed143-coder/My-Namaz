@@ -5,6 +5,7 @@ import { GrFavorite } from "react-icons/gr";
 import { useState } from "react";
 import MasjidList from "./MasjidList";
 import Announcement from "@/components/Home/Announcement";
+import UpcomingPrayer from "../UpcomingPrayer";
 
 const Home = () => {
   const [searchMasjid, setSearchMasjid] = useState("");
@@ -26,6 +27,15 @@ const Home = () => {
       location: "Istanbul, Turkey",
     },
   ];
+  const namazTiming = {
+    fajr: { time: "04:40", period: "AM" },
+    sunrise: { time: "06:00", period: "AM" },
+    zohar: { time: "12:45", period: "PM" },
+    asr: { time: "04:30", period: "PM" },
+    maghrib: { time: "06:10", period: "PM" },
+    isha: { time: "07:35", period: "PM" },
+  };
+  
 
   return (
     <main className="text-black mt-16 md:mt-20 h-screen overflow-hidden flex flex-col">
@@ -43,11 +53,11 @@ const Home = () => {
 
       {/* Split screen: Masjids & Announcements */}
       <div className="flex flex-col md:flex-row md:gap-3 flex-1 min-h-0 px-2">
-        
-        {/* Left column (Masjids) */}
+        {/* Left column */}
         <div className="md:w-[60%] flex flex-col gap-2 flex-1 min-h-0">
-          {/* Favorites (non-scrollable) */}
-          <div className="m-1 flex-shrink-0">
+          {/* Upcoming namaz */}
+          <UpcomingPrayer namazTiming={namazTiming}/>
+          {/* <div className="m-1 flex-shrink-0">
             <h5 className="ml-2 flex items-center gap-1 mt-2 font-medium text-black">
               Favorites <GrFavorite className="w-4 h-4" />
             </h5>
@@ -69,7 +79,7 @@ const Home = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* All Masjids (scrollable list) */}
           <div className="my-1 mx-2 flex-1 min-h-0 max-h-[35vh] flex flex-col border border-gray-400 md:border-0 rounded-lg">
@@ -84,9 +94,9 @@ const Home = () => {
 
         {/* Right column (Announcements - scrollable) */}
         <div className="md:w-[40%] m-2 mb-4 flex flex-col flex-1 min-h-0 max-h-[40vh] md:max-h-[87vh] border border-gray-400 shadow rounded-lg">
-           <h5 className="ml-2 mt-1 font-medium text-black flex-shrink-0 py-1">
-              Announcement (Krishnagiri)
-            </h5>
+          <h5 className="ml-2 mt-1 font-medium text-black flex-shrink-0 py-1">
+            Announcement (Krishnagiri)
+          </h5>
           <div className="flex-1 overflow-y-auto  min-h-0 mb-4">
             <Announcement />
           </div>

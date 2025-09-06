@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "@/app/loading";
+import useSWR from "swr";
 
 const Announcement = () => {
   //   const announcementsList = [
@@ -39,28 +40,41 @@ const Announcement = () => {
   //   ];
   const [announcement, setAnnouncement] = useState([]);
   const [isloading, setIsLoading] = useState(false);
-  const allAnnouncement = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get("/api/announcement");
-      console.log("announJ: ", res);
-      setAnnouncement(res.data.details);
-    } catch (error) {
-      console.error(error.message);
-      alert(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  useEffect(() => {
-    allAnnouncement();
-  }, []);
-if(isloading) return <Loading/>
+  const fetcher = (url) => axios.get(url).then((res) => res.data);
+  const { data:overallAnnouncement, error, isLoading } = useSWR("/api/announcement", fetcher, {
+    refreshInterval: 1000000, // re-fetch
+    revalidateOnFocus: true, // re-fetch when window refocus
+    dedupingInterval: 200000,
+  });
+  useEffect(()=>{
+if(overallAnnouncement?.details){
+     setAnnouncement(overallAnnouncement.details);
+  }
+  },[overallAnnouncement])
+  
+
+  // const allAnnouncement = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const res = await axios.get("/api/announcement");
+  //     console.log("announJ: ", res);
+  //     setAnnouncement(res.data.details);
+  //   } catch (error) {
+  //     console.error(error.message);
+  //     alert(error.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   allAnnouncement();
+  // }, []);
+  if (isloading) return <Loading />;
   return (
     <div className="py-1 px-2 my-0.5 border-gray-400 rounded-xl mb-2">
       {announcement?.map((item, index) => (
         <div
-          className="border border-gray-400 p-1 shadow my-1.5 mx-0.5 rounded-lg text-center mb-4"
+          className="border border-gray-400 p-1 shadow my-1 mx-0.5 rounded-lg text-center mb-2 hover:shadow-md hover:shadow-blue-300"
           key={index}
         >
           <h5 className="text-lg font-medium">{item?.userId.masjid}</h5>

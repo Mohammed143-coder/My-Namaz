@@ -33,7 +33,7 @@ if(isLoading) return <Loading/>
             href={`/${item._id}`}
             key={item._id}
             onClick={() => dispatch(selectedMasjidName(item.masjid))}
-            className="flex items-center text-black gap-4 border border-gray-400 my-1 rounded-lg p-1"
+            className="flex items-center text-black gap-4 border border-gray-400 my-1 rounded-lg p-1 hover:shadow-md hover:shadow-blue-300"
           >
             <div className="bg-gray-300 rounded-lg shadow-xl p-1">
               <PiMosqueDuotone className="w-8 h-8" />

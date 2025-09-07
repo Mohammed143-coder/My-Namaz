@@ -34,6 +34,7 @@ const Home = () => {
     asr: { time: "04:30", period: "PM" },
     maghrib: { time: "06:10", period: "PM" },
     isha: { time: "07:35", period: "PM" },
+    tahajjud:{time:"01:25",period:"AM"}
   };
   
 

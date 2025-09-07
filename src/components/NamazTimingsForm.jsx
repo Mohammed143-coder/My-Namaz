@@ -115,7 +115,7 @@ const NamazTimingsForm = ({ User }) => {
   return (
     <div className="w-full h-screen p-4 bg-white text-black">
       <CommonHeader>Timings & Announcement</CommonHeader>
-      <h5 className="text-center mt-2 font-medium">Welcome {User.userName}</h5>
+      <h5 className="text-center mt-5 font-medium">Welcome {User.userName}</h5>
 
       {/* Timings Form */}
       <form onSubmit={handleSaveTimings}>

@@ -1,4 +1,4 @@
-import HadithLayout from "@/components/HadithLayout";
+import HadithLayout from "@/components/HadithMain";
 
 const Hadith = () => {
   return (

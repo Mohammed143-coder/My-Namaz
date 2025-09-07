@@ -16,7 +16,7 @@ const to24HourDate = (time, period) => {
 
 // Get current & upcoming prayers
 const getPrayerStatus = (namazTiming) => {
-  const prayers = ["fajr", "zohar", "asr", "maghrib", "isha"]; // skip sunrise
+  const prayers = ["fajr", "zohar", "asr", "maghrib", "isha","tahajjud"]; // skip sunrise
   const now = new Date();
   let prayerTimes = [];
 
@@ -84,7 +84,7 @@ const UpcomingPrayer = ({ namazTiming }) => {
   if (!status) return <Loading />;
 
   return (
-    <div className="p-2 bg-blue-100 rounded-lg text-center shadow my-2 ">
+    <div className="p-2 bg-blue-100 rounded-lg text-center shadow-md shadow-blue-200 my-2 hover:shadow-lg hover:shadow-blue-300 hover:scale-95 text-black">
       <h3 className="text-lg font-medium">Your Amazing Update...!</h3>
       <p className="capitalize">Current : {status.current.prayer}</p>
       <p className="capitalize">Next : {status.upcoming.prayer}</p>

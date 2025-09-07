@@ -39,7 +39,7 @@ const Announcement = () => {
   //
   //   ];
   const [announcement, setAnnouncement] = useState([]);
-  const [isloading, setIsLoading] = useState(false);
+  
   const fetcher = (url) => axios.get(url).then((res) => res.data);
   const { data:overallAnnouncement, error, isLoading } = useSWR("/api/announcement", fetcher, {
     refreshInterval: 1000000, // re-fetch
@@ -69,10 +69,11 @@ if(overallAnnouncement?.details){
   // useEffect(() => {
   //   allAnnouncement();
   // }, []);
-  if (isloading) return <Loading />;
+  if (isLoading) return <Loading />;
   return (
     <div className="py-1 px-2 my-0.5 border-gray-400 rounded-xl mb-2">
-      {announcement?.map((item, index) => (
+      {announcement.length>0 ?(
+        announcement?.map((item, index) => (
         <div
           className="border border-gray-400 p-1 shadow my-1 mx-0.5 rounded-lg text-center mb-2 hover:shadow-md hover:shadow-blue-300"
           key={index}
@@ -85,7 +86,9 @@ if(overallAnnouncement?.details){
             })}
           </small>
         </div>
-      ))}
+      ))
+      ):(<div className="text-center text-gray-500">No Announcement found.</div>)
+      }
     </div>
   );
 };

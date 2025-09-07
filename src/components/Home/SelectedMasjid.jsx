@@ -7,6 +7,7 @@ import { BsSun } from "react-icons/bs";
 import { RiMoonCloudyLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import useSWR from "swr";
+import Loading from "@/app/loading";
 
 const SelectedMasjid = ({ userId }) => {
   const [selectedMasjid, setSelectedMasjid] = useState("");
@@ -44,10 +45,10 @@ const SelectedMasjid = ({ userId }) => {
     }
   }, [announcementData, namazData]);
   const selectedMasjidName = useSelector((state) => state.auth.masjid);
-
+if (announcementLoading || isLoading) return <Loading/>
   return (
     <div className="bg-white min-h-screen text-black p-1 mb-4">
-      <CommonHeader>{selectedMasjidName || "My Masjid"}</CommonHeader>
+      <CommonHeader>{selectedMasjidName || "Selected Masjid"}</CommonHeader>
 
       <div className="md:flex mb-2 overflow-y-auto mt-8">
         <div className="mt-2 p-2 md:w-[50%]">
@@ -92,7 +93,7 @@ const SelectedMasjid = ({ userId }) => {
               </div>
             ))
           ) : (
-            <div className="text-center text-gray-500">No Timings found.</div>
+            <div className="text-center text-gray-400">No Timings found.</div>
           )}
         </div>
         <div className="mt-2 p-2 mb-8 md:w-[50%] ">
@@ -112,7 +113,7 @@ const SelectedMasjid = ({ userId }) => {
               </div>
             ))
           ) : (
-            <div className="text-center">No Announcement found</div>
+            <div className="text-center text-gray-400">No Announcement found</div>
           )}
         </div>
       </div>

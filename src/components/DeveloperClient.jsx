@@ -21,7 +21,7 @@ export default function DeveloperClient({ user }) {
   return (
     <div className="bg-white p-2 h-screen text-black">
        <CommonHeader>Developer Page</CommonHeader>
-      {user ? <p className="font-semibold text-center my-2">Welcome {user.id||user.userName}</p> : <p>No valid token</p>}
+      {user ? <p className="font-semibold text-center mt-7">Welcome {user.userName || user.id}</p> : <p>No valid token</p>}
     </div>
   );
 }

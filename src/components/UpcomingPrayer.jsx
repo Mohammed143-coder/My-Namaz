@@ -89,7 +89,7 @@ const UpcomingPrayer = ({ namazTiming }) => {
       <p className="capitalize">Current : {status.current.prayer}</p>
       <p className="capitalize">Next : {status.upcoming.prayer}</p>
       <p className="text-green-600 font-medium">
-        Next prayer in {countdown}
+        Next salah in : {countdown}
       </p>
       <p className="text-sm text-end text-gray-600">Check masjid near you...</p>
     </div>

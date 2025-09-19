@@ -5,6 +5,7 @@ import { selectedMasjidName } from "@/lib/userSlice/authSlice";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { BsBookmarkHeart } from "react-icons/bs";
 import { LuExternalLink } from "react-icons/lu";
 import { PiMosqueDuotone } from "react-icons/pi";
@@ -13,11 +14,18 @@ import useSWR from "swr";
 
 const MasjidList = ({ searchMasjid }) => {
   const dispatch = useDispatch();
-  const router=useRouter()
+  const router = useRouter();
+  const [favoriteId, setFavoriteId] = useState(null);
+
+  const toggleFavorite = (id) => {
+    setFavoriteId((prev) => (prev === id ? null : id));
+    sessionStorage.setItem("selectedMasjidId", id);
+  };
+
   const fetcher = (url) => axios.get(url).then((res) => res.data);
 
   const { data, error, isLoading, mutate } = useSWR("/api/user", fetcher, {
-    refreshInterval: 1000000, // re-fetch 
+    refreshInterval: 1000000, // re-fetch
     revalidateOnFocus: true, // re-fetch when window refocus
     dedupingInterval: 200000,
   });
@@ -28,7 +36,8 @@ const MasjidList = ({ searchMasjid }) => {
       item.masjid.toLowerCase().includes(searchMasjid.toLowerCase()) ||
       item.masjidLocation.toLowerCase().includes(searchMasjid.toLowerCase())
   );
-if(isLoading) return <Loading/>
+
+  if (isLoading) return <Loading />;
   return (
     <div className="p-2 overflow-y-auto">
       {filteredMasjids?.length > 0 ? (
@@ -47,8 +56,19 @@ if(isLoading) return <Loading/>
               <span>{item.masjidLocation.substring(0, 20)}</span>
             </div>
             <div className="flex items-center gap-2 md:gap-3 font-bold">
-              <LuExternalLink  className="w-5 h-5" onClick={()=>router.push(`/${item._id}`)}/>
-              <BsBookmarkHeart className="w-5 h-5"/>
+              <LuExternalLink
+                className="w-5 h-5"
+                onClick={() => router.push(`/${item._id}`)}
+              />
+              <BsBookmarkHeart
+                className={`w-5 h-5 cursor-pointer ${
+                  favoriteId === item._id ? "text-emerald-500" : ""
+                }`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(item._id);
+                }}
+              />
             </div>
           </div>
         ))

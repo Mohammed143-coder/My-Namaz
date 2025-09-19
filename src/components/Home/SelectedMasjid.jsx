@@ -10,9 +10,21 @@ import useSWR from "swr";
 import Loading from "@/app/loading";
 
 const SelectedMasjid = ({ userId }) => {
-  const [selectedMasjid, setSelectedMasjid] = useState("");
+  const [selectedMasjid, setSelectedMasjid] = useState([]);
   const [announcement, setAnnouncement] = useState([]);
-  const [masjidName, setMasjidName] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
+  // helper function to check ObjectId
+const isValidObjectId = (id) => /^[0-9a-fA-F]{24}$/.test(id);
+
+  // safely load sessionStorage only on client
+  useEffect(() => {
+    if (userId && isValidObjectId(userId)) {
+      setSelectedUser(userId);
+    } else {
+      const storedId = sessionStorage.getItem("selectedMasjidId");
+      setSelectedUser(storedId);
+    }
+  }, [userId]);
   const fetcher = (url) => axios.get(url).then((res) => res.data);
 
   const {
@@ -20,7 +32,7 @@ const SelectedMasjid = ({ userId }) => {
     error,
     isLoading,
     mutate,
-  } = useSWR(`/api/namaz?userId=${userId}`, fetcher, {
+  } = useSWR(`/api/namaz?userId=${selectedUser}`, fetcher, {
     refreshInterval: 1000000, // re-fetch
     revalidateOnFocus: true, // re-fetch when window refocus
     dedupingInterval: 200000,
@@ -30,7 +42,7 @@ const SelectedMasjid = ({ userId }) => {
     data: announcementData,
     error: announcementError,
     isLoading: announcementLoading,
-  } = useSWR(`/api/announcement?userId=${userId}`, fetcher, {
+  } = useSWR(`/api/announcement?userId=${selectedUser}`, fetcher, {
     refreshInterval: 1000000, // re-fetch
     revalidateOnFocus: true, // re-fetch when window refocus
     dedupingInterval: 200000,
@@ -45,7 +57,7 @@ const SelectedMasjid = ({ userId }) => {
     }
   }, [announcementData, namazData]);
   const selectedMasjidName = useSelector((state) => state.auth.masjid);
-if (announcementLoading || isLoading) return <Loading/>
+  if (announcementLoading || isLoading) return <Loading />;
   return (
     <div className="bg-white min-h-screen text-black p-1 mb-4">
       <CommonHeader>{selectedMasjidName || "Selected Masjid"}</CommonHeader>
@@ -54,7 +66,7 @@ if (announcementLoading || isLoading) return <Loading/>
         <div className="mt-2 p-2 md:w-[50%]">
           <p className="font-semibold text-base mb-4">Today's Prayer Times</p>
 
-          {selectedMasjid?.length > 0 ? (
+          { Array.isArray(selectedMasjid)&& selectedMasjid.length > 0 ? (
             selectedMasjid.map((item, index) => (
               <div key={index} className="space-y-2  ">
                 {Object.entries(item.namazTiming || {}).map(
@@ -98,7 +110,7 @@ if (announcementLoading || isLoading) return <Loading/>
         </div>
         <div className="mt-2 p-2 mb-8 md:w-[50%] ">
           <p className="font-semibold text-base mb-3">Masjid's Announcements</p>
-          {announcement?.length > 0 ? (
+          {Array.isArray(announcement) && announcement?.length > 0 ? (
             announcement?.map((item, index) => (
               <div
                 className="border border-gray-400 rounded-lg shadow-sm hover:shadow-md hover:shadow-blue-300 text-center mt-2 p-1"
@@ -113,7 +125,9 @@ if (announcementLoading || isLoading) return <Loading/>
               </div>
             ))
           ) : (
-            <div className="text-center text-gray-400">No Announcement found</div>
+            <div className="text-center text-gray-400">
+              No Announcement found
+            </div>
           )}
         </div>
       </div>

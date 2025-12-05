@@ -21,7 +21,7 @@ const Footer = () => {
 
   return (
     <section className="w-full bg-gradient-to-r from-emerald-50 via-white to-emerald-50 fixed bottom-0 text-charcoal border-t-2 border-emerald-200 shadow-2xl z-10">
-      <div className="flex justify-between items-center mb-2 mx-2 p-2 md:mx-8 md:max-w-4xl md:mx-auto">
+      <div className="flex justify-between items-center mb-2 mx-2 p-2 md:max-w-4xl md:mx-auto">
         {navItems.map((item, index) => (
           <button
             key={index}

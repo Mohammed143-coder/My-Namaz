@@ -12,7 +12,13 @@ const to24HourDate = (time, period) => {
   if (period === "AM" && hour === 12) hour = 0;
 
   const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
+  return new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    hour,
+    minute
+  );
 };
 
 // Get current & upcoming prayers
@@ -23,7 +29,14 @@ const getPrayerStatus = (namazTiming) => {
 
   prayers.forEach((prayer) => {
     const entry = namazTiming[prayer];
-    if (entry?.time) {
+
+    // For prayers with Azan and Namaz times, use namazTime for countdown
+    if (entry?.namazTime?.time) {
+      const d = to24HourDate(entry.namazTime.time, entry.namazTime.period);
+      if (d) prayerTimes.push({ prayer, time: d });
+    }
+    // For Sunrise or old format with just time
+    else if (entry?.time) {
       const d = to24HourDate(entry.time, entry.period);
       if (d) prayerTimes.push({ prayer, time: d });
     }
@@ -37,7 +50,8 @@ const getPrayerStatus = (namazTiming) => {
   for (let i = 0; i < prayerTimes.length; i++) {
     if (now < prayerTimes[i].time) {
       upcoming = prayerTimes[i];
-      current = i === 0 ? prayerTimes[prayerTimes.length - 1] : prayerTimes[i - 1];
+      current =
+        i === 0 ? prayerTimes[prayerTimes.length - 1] : prayerTimes[i - 1];
       break;
     }
   }
@@ -64,8 +78,10 @@ const formatTimeDiff = (targetTime) => {
 };
 
 const getPrayerIcon = (prayer) => {
-  if (prayer === "fajr" || prayer === "tahajjud") return <FaMoon className="w-5 h-5" />;
-  if (prayer === "maghrib" || prayer === "isha") return <FaMoon className="w-5 h-5" />;
+  if (prayer === "fajr" || prayer === "tahajjud")
+    return <FaMoon className="w-5 h-5" />;
+  if (prayer === "maghrib" || prayer === "isha")
+    return <FaMoon className="w-5 h-5" />;
   return <FaSun className="w-5 h-5" />;
 };
 
@@ -96,23 +112,31 @@ const UpcomingPrayer = ({ namazTiming }) => {
           <FaClock className="w-5 h-5" />
           Prayer Times
         </h3>
-        
+
         <div className="grid grid-cols-2 gap-4 mb-4">
           {/* Current Prayer */}
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-            <p className="text-xs uppercase tracking-wide opacity-90 mb-1">Current</p>
+            <p className="text-xs uppercase tracking-wide opacity-90 mb-1">
+              Current
+            </p>
             <div className="flex items-center justify-center gap-2">
               {getPrayerIcon(status.current.prayer)}
-              <p className="text-lg font-bold capitalize">{status.current.prayer}</p>
+              <p className="text-lg font-bold capitalize">
+                {status.current.prayer}
+              </p>
             </div>
           </div>
 
           {/* Next Prayer */}
           <div className="bg-amber-400 rounded-xl p-4 shadow-md">
-            <p className="text-xs uppercase tracking-wide opacity-90 mb-1">Next</p>
+            <p className="text-xs uppercase tracking-wide opacity-90 mb-1">
+              Next
+            </p>
             <div className="flex items-center justify-center gap-2">
               {getPrayerIcon(status.upcoming.prayer)}
-              <p className="text-lg font-bold capitalize">{status.upcoming.prayer}</p>
+              <p className="text-lg font-bold capitalize">
+                {status.upcoming.prayer}
+              </p>
             </div>
           </div>
         </div>

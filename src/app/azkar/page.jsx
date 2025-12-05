@@ -101,93 +101,73 @@ const AzkarPage = () => {
   // Category List View
   if (!selectedCategory) {
     return (
-      <div className="min-h-screen pattern-bg pb-24">
-        <div className="max-w-4xl mx-auto p-4">
-          <div className="mt-6">
-            <h1 className="text-3xl md:text-4xl font-bold text-center gradient-text mb-2">
+      <div className="min-h-screen pattern-bg bg-gradient-to-b from-amber-50 to-emerald-50 pb-24 ">
+        <div className="max-w-6xl mx-auto p-4">
+          {/* Header */}
+          <div className="mt-6 mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" >
               Daily Azkar
             </h1>
-            <p className="text-center text-gray-600">
-              Your daily companion for remembrance of Allah
-            </p>
           </div>
 
-          <div className="mt-6 card-gold p-6 text-center">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              Daily Adhkar Collection
+          {/* My Favorite Azkar Section */}
+          <div className="flex items-center justify-between bg-white/10 backdrop-blur-sm rounded-3xl p-6 mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2" >
+Azkar Collections
+              </h2>
+              <p className="text-white/80 italic">Your Daily companion for remembrance of Allah</p>
+            </div>
+            <div className="text-6xl">📖</div>
+          </div>
+
+          {/* Azkar List Section */}
+          <div className="bg-white/80 rounded-3xl pt-6 px-4 pb-6">
+            <h3 className="text-2xl font-semibold text-gray-600 mb-6" >
+              Azkar List
             </h3>
-            <p className="text-gray-700">
-              Select a category to view the specific azkar and supplications
-            </p>
-          </div>
 
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-            {categories.map((cat, index) => {
-              const IconComponent = cat.icon;
-              const categoryCount = sampleAzkar.filter(
-                (a) => a.category === cat.id
-              ).length;
-
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className="card-islamic p-6 text-left hover:scale-105 transition-all group fade-in"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <div className="flex items-start gap-4">
-                    <div
-                      className={`bg-gradient-to-br ${cat.color} p-4 rounded-2xl shadow-lg group-hover:shadow-xl transition-all`}
-                    >
-                      <IconComponent className="w-8 h-8 text-white" />
-                    </div>
-
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-lg font-bold text-gray-800">
-                          {cat.label}
-                        </h3>
-                        <BiChevronRight className="w-6 h-6 text-gray-400 group-hover:text-emerald-600 transition-colors" />
+            <div className="space-y-3">
+              {categories.map((cat, index) => {
+                const IconComponent = cat.icon;
+                const categoryCount = sampleAzkar.filter(
+                  (a) => a.category === cat.id
+                ).length;
+                
+               
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className="w-full bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="text-4xl flex-shrink-0">
+                        {cat.id === "morning" && "🌤️"}
+                        {cat.id === "evening" && "🌙"}
+                        {cat.id === "before-sleeping" && "🛏️"}
+                        {cat.id === "waking-up" && "🛏️"}
+                        {cat.id === "after-prayer" && "🧎"}
+                        {cat.id === "after-adhan" && "🤲"}
+                        {cat.id === "entering-mosque" && "🕌"}
+                        {cat.id === "leaving-mosque" && "🕌"}
+                        {cat.id === "eating" && "🍽️"}
+                        {cat.id === "drinking" && "🥤"}
                       </div>
-                      <p className="text-sm text-gray-600 mb-2">
-                        {cat.description}
-                      </p>
-                      <span className="inline-block bg-emerald-100 text-emerald-700 text-xs px-3 py-1 rounded-full font-semibold">
-                        {categoryCount} {categoryCount === 1 ? "Dua" : "Duas"}
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
 
-          <div className="mt-8 card-islamic p-6">
-            <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-              <FaMosque className="w-5 h-5 text-emerald-600" />
-              About Daily Azkar
-            </h4>
-            <p className="text-gray-700 text-sm leading-relaxed mb-3">
-              The Prophet Muhammad ﷺ taught us various supplications (azkar) for
-              different times and situations. These azkar help us maintain a
-              constant connection with Allah throughout our daily activities.
-            </p>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-600 mt-1">✓</span>
-                <span>Reciting azkar brings blessings and protection</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-600 mt-1">✓</span>
-                <span>Each dua has specific benefits mentioned in Hadith</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-600 mt-1">✓</span>
-                <span>
-                  Regular practice strengthens your relationship with Allah
-                </span>
-              </li>
-            </ul>
+                      <div className="flex-1 text-left">
+                        <h4 className="text-lg font-semibold text-gray-800 mb-1" >
+                          {cat.label}
+                        </h4>
+                        {/* <p className="text-sm text-gray-500">
+                          Today's reading ⭕/{totalCount}
+                        </p> */}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -250,19 +230,6 @@ const AzkarPage = () => {
                 <AzkarCard key={index} azkar={azkar} index={index} />
               ))}
             </div>
-
-            {/* Count Summary */}
-            {/* <div className="mt-8 card-gold p-6 text-center">
-              <p className="text-gray-700">
-                <span className="font-bold text-emerald-600 text-2xl">{filteredAzkar.length}</span>
-                <span className="text-gray-600 ml-2">
-                  {filteredAzkar.length === 1 ? 'supplication' : 'supplications'} in this category
-                </span>
-              </p>
-              <p className="text-sm text-gray-600 mt-2">
-                May Allah accept your dhikr and grant you His blessings
-              </p>
-            </div> */}
           </>
         )}
       </div>

@@ -49,12 +49,12 @@ const FavouritePage = () => {
         <CommonHeader>Favorite Masjids</CommonHeader>
 
         {/* Debug Info (remove in production) */}
-        <div className="mt-4 p-3 bg-gray-100 rounded-lg text-xs">
+        {/* <div className="mt-4 p-3 bg-gray-100 rounded-lg text-xs">
           <p><strong>Debug Info:</strong></p>
           <p>Favorites IDs: {JSON.stringify(favorites)}</p>
           <p>Total Masjids: {allMasjids.length}</p>
           <p>Matched Favorites: {favoriteMasjids.length}</p>
-        </div>
+        </div> */}
 
         {favoriteMasjids.length === 0 ? (
           <div className="mt-8 card-islamic p-12 text-center">

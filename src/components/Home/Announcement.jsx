@@ -39,19 +39,30 @@ const Announcement = () => {
   //
   //   ];
   const [announcement, setAnnouncement] = useState([]);
-  
+
   const fetcher = (url) => axios.get(url).then((res) => res.data);
-  const { data:overallAnnouncement, error, isLoading } = useSWR("/api/announcement", fetcher, {
+  const {
+    data: overallAnnouncement,
+    error,
+    isLoading,
+  } = useSWR("/api/announcement", fetcher, {
     refreshInterval: 1000000, // re-fetch
     revalidateOnFocus: true, // re-fetch when window refocus
     dedupingInterval: 200000,
   });
-  useEffect(()=>{
-if(overallAnnouncement?.details){
-     setAnnouncement(overallAnnouncement.details);
-  }
-  },[overallAnnouncement])
-  
+  useEffect(() => {
+    if (overallAnnouncement?.details) {
+      // Sort announcements: important first, then by date (newest first)
+      const sorted = [...overallAnnouncement.details].sort((a, b) => {
+        // First, sort by type (important first)
+        if (a.type === "important" && b.type !== "important") return -1;
+        if (a.type !== "important" && b.type === "important") return 1;
+        // Then sort by date (newest first)
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      setAnnouncement(sorted);
+    }
+  }, [overallAnnouncement]);
 
   // const allAnnouncement = async () => {
   //   try {
@@ -70,25 +81,60 @@ if(overallAnnouncement?.details){
   //   allAnnouncement();
   // }, []);
   if (isLoading) return <Loading />;
+
   return (
-    <div className="py-1 px-2 my-0.5 border-gray-400 rounded-xl mb-2 text-gray-600">
-      {announcement.length>0 ?(
-        announcement?.map((item, index) => (
-        <div
-          className="border border-gray-400 p-1 shadow my-1 mx-0.5 rounded-lg text-center mb-2 hover:shadow-md hover:shadow-blue-300"
-          key={index}
-        >
-          <h5 className="text-lg font-medium text-gray-600">{item?.userId.masjid}</h5>
-          <p>{item.message}</p>
-          <small className="my-0.5">
-            {new Date(item.createdAt).toLocaleString("en-US", {
-              hour12: true,
-            })}
-          </small>
+    <div className="py-1 px-2 my-0.5 rounded-xl mb-2">
+      {announcement.length > 0 ? (
+        announcement?.map((item, index) => {
+          const isImportant = item.type === "important";
+          return (
+            <div
+              className={`border-2 p-3 shadow my-2 mx-0.5 rounded-lg text-center transition-all hover:shadow-lg ${
+                isImportant
+                  ? "border-orange-400 bg-orange-50 hover:shadow-orange-200"
+                  : "border-emerald-300 bg-emerald-50 hover:shadow-blue-200"
+              }`}
+              key={index}
+            >
+              {isImportant && (
+                <div className="flex items-center justify-center gap-1 mb-2">
+                  {/* <span className="text-xl">❗</span> */}
+                  <span className="text-xs font-bold text-orange-600 uppercase tracking-wider px-2 py-1 bg-orange-100 rounded-full">
+                    Important
+                  </span>
+                </div>
+              )}
+              <h5
+                className={`text-lg font-semibold mb-2 ${
+                  isImportant ? "text-orange-500" : "text-gray-700"
+                }`}
+              >
+                {item?.userId.masjid}
+              </h5>
+              <p
+                className={`text-sm leading-relaxed ${
+                  isImportant ? "text-gray-800 font-medium" : "text-gray-600"
+                }`}
+              >
+                {item.message}
+              </p>
+              <small className="block mt-2 text-gray-500">
+                {new Date(item.createdAt).toLocaleString("en-US", {
+                  hour12: true,
+                  month: "short",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </small>
+            </div>
+          );
+        })
+      ) : (
+        <div className="text-center text-gray-500 py-4">
+          No Announcement found.
         </div>
-      ))
-      ):(<div className="text-center text-gray-500">No Announcement found.</div>)
-      }
+      )}
     </div>
   );
 };

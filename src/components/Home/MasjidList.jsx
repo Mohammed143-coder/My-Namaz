@@ -35,10 +35,42 @@ const MasjidList = ({ searchMasjid }) => {
 
   return (
     <div className="p-2 overflow-y-auto">
+      {/* Favorites Counter Banner */}
+      {favorites.length > 0 && (
+        <div
+          className={`mb-4 p-3 rounded-xl border-2 transition-all ${
+            favorites.length >= 3
+              ? "bg-red-50 border-red-300"
+              : "bg-emerald-50 border-emerald-300"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BsBookmarkHeartFill
+                className={`w-4 h-4 ${
+                  favorites.length >= 3 ? "text-red-500" : "text-emerald-600"
+                }`}
+              />
+              <span
+                className={`text-sm font-semibold ${
+                  favorites.length >= 3 ? "text-red-700" : "text-emerald-700"
+                }`}
+              >
+                {favorites.length} / 3 Favorites
+              </span>
+            </div>
+            {favorites.length >= 3 && (
+              <span className="text-xs text-red-600 font-medium">
+                Limit reached
+              </span>
+            )}
+          </div>
+        </div>
+      )}
       {filteredMasjids?.length > 0 ? (
         filteredMasjids.slice(0, 8).map((item) => {
           const isItemFavorite = isFavorite(item._id);
-          
+
           return (
             <div
               key={item._id}
@@ -49,7 +81,9 @@ const MasjidList = ({ searchMasjid }) => {
                 <PiMosqueDuotone className="w-8 h-8 text-emerald-600" />
               </div>
               <div className="flex flex-col gap-1 flex-1">
-                <span className="font-semibold text-gray-800">{item.masjid}</span>
+                <span className="font-semibold text-gray-800">
+                  {item.masjid}
+                </span>
                 <span className="text-sm text-gray-600">
                   {item.masjidLocation.substring(0, 30)}
                   {item.masjidLocation.length > 30 ? "..." : ""}
@@ -71,13 +105,35 @@ const MasjidList = ({ searchMasjid }) => {
                     e.stopPropagation();
                     toggleFavorite(item._id);
                   }}
-                  className="hover:bg-red-50 p-2 rounded-lg transition"
-                  aria-label={isItemFavorite ? "Remove from favorites" : "Add to favorites"}
+                  disabled={!isItemFavorite && favorites.length >= 3}
+                  className={`p-2 rounded-lg transition ${
+                    !isItemFavorite && favorites.length >= 3
+                      ? "opacity-40 cursor-not-allowed"
+                      : "hover:bg-red-50"
+                  }`}
+                  aria-label={
+                    isItemFavorite
+                      ? "Remove from favorites"
+                      : "Add to favorites"
+                  }
+                  title={
+                    !isItemFavorite && favorites.length >= 3
+                      ? "Maximum 3 favorites allowed"
+                      : isItemFavorite
+                      ? "Remove from favorites"
+                      : "Add to favorites"
+                  }
                 >
                   {isItemFavorite ? (
                     <BsBookmarkHeartFill className="w-5 h-5 text-red-500" />
                   ) : (
-                    <BsBookmarkHeart className="w-5 h-5 text-gray-500 hover:text-red-500" />
+                    <BsBookmarkHeart
+                      className={`w-5 h-5 ${
+                        favorites.length >= 3
+                          ? "text-gray-300"
+                          : "text-gray-500 hover:text-red-500"
+                      }`}
+                    />
                   )}
                 </button>
               </div>

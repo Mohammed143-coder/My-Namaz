@@ -8,12 +8,27 @@ const namazSchema = new mongoose.Schema(
       required: true,
     },
     namazTiming: {
-      fajr: { time: String, period: String },
-      sunrise: { time: String, period: String },
-      zohar: { time: String, period: String },
-      asr: { time: String, period: String },
-      maghrib: { time: String, period: String },
-      isha: { time: String, period: String },
+      fajr: {
+        azanTime: { time: String, period: String },
+        namazTime: { time: String, period: String },
+      },
+      sunrise: { time: String, period: String }, // Only one timing for sunrise
+      zohar: {
+        azanTime: { time: String, period: String },
+        namazTime: { time: String, period: String },
+      },
+      asr: {
+        azanTime: { time: String, period: String },
+        namazTime: { time: String, period: String },
+      },
+      maghrib: {
+        azanTime: { time: String, period: String },
+        namazTime: { time: String, period: String },
+      },
+      isha: {
+        azanTime: { time: String, period: String },
+        namazTime: { time: String, period: String },
+      },
     },
   },
   { timestamps: true }

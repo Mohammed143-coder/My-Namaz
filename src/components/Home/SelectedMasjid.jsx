@@ -61,7 +61,7 @@ export default function SelectedMasjid({ userId }) {
       <div className="md:flex gap-4 mt-6">
 
         {/* LEFT — PRAYER TIMES */}
-        <div className="mt-2 p-2 md:w-[50%] overflow-y-auto">
+        <div className="mt-2 p-2 md:w-[50%] h-[90vh] overflow-y-auto">
           <p className="font-semibold text-gray-600 text-xl mb-4">Today's Prayer Times</p>
 
           {selectedMasjid?.length > 0 ? (
@@ -81,7 +81,7 @@ export default function SelectedMasjid({ userId }) {
                     <div className="bg-white border border-gray-300 rounded-lg p-1">
                       {ICON(prayerKey)}
                     </div>
-                    <span className="font-bold text-lg capitalize">
+                    <span className="font-bold capitalize">
                       {prayerKey}
                     </span>
                   </div>
@@ -97,7 +97,7 @@ export default function SelectedMasjid({ userId }) {
                   ) : (
                     <>
                       {/* AZAN */}
-                      <div className="flex justify-between items-center bg-white border border-gray-200 rounded-xl p-3 mb-3">
+                      <div className="flex text-sm lg:text-base justify-between items-center bg-white border border-gray-200 rounded-xl p-3 mb-3">
                         <span className="font-semibold">
                           Azan — {details.azanTime.time}{" "}
                           {details.azanTime.period}
@@ -106,7 +106,7 @@ export default function SelectedMasjid({ userId }) {
                       </div>
 
                       {/* NAMAZ */}
-                      <div className="flex justify-between items-center bg-white border border-gray-200 rounded-xl p-3">
+                      <div className="flex text-sm lg:text-base justify-between items-center bg-white border border-gray-200 rounded-xl p-3">
                         <span className="font-semibold">
                           Namaz — {details.namazTime.time}{" "}
                           {details.namazTime.period}
@@ -124,7 +124,7 @@ export default function SelectedMasjid({ userId }) {
         </div>
 
         {/* RIGHT — ANNOUNCEMENTS */}
-        <div className="mt-2 p-2 md:w-[50%] h-[75vh] overflow-y-auto">
+        <div className="mt-2 p-2 md:w-[50%] h-[90vh] overflow-y-auto">
   <p className="font-semibold text-base mb-3">Masjid's Announcements</p>
 
   {announcement?.length > 0 ? (
@@ -144,27 +144,27 @@ export default function SelectedMasjid({ userId }) {
             {/* Important Badge */}
             {isImportant && (
               <div className="flex items-center justify-center gap-1 mb-2">
-                <span className="text-xs font-bold text-orange-600 uppercase tracking-wider px-2 py-1 bg-orange-100 rounded-full">
+                <span className="text-xs lg:text-sm font-bold text-orange-600 uppercase tracking-wider px-2 py-1 bg-orange-100 rounded-full">
                   Important
                 </span>
               </div>
             )}
 
             {/* Masjid Name */}
-            <h5
+            {/* <h5
               className={`text-lg font-semibold mb-1 ${
                 isImportant ? "text-orange-500" : "text-gray-700"
               }`}
             >
               {item?.userId?.masjid}
-            </h5>
+            </h5> */}
 
             {/* Announcement Message */}
             <p
-              className={`text-sm leading-relaxed ${
+              className={`text-sm lg:text-base leading-relaxed ${
                 isImportant
-                  ? "text-gray-800 font-medium"
-                  : "text-gray-600"
+                  ? "text-gray-600 font-semibold"
+                  : "text-gray-500 font-medium"
               }`}
             >
               {item.message}

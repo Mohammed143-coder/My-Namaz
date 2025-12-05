@@ -71,14 +71,14 @@ if(overallAnnouncement?.details){
   // }, []);
   if (isLoading) return <Loading />;
   return (
-    <div className="py-1 px-2 my-0.5 border-gray-400 rounded-xl mb-2">
+    <div className="py-1 px-2 my-0.5 border-gray-400 rounded-xl mb-2 text-gray-600">
       {announcement.length>0 ?(
         announcement?.map((item, index) => (
         <div
           className="border border-gray-400 p-1 shadow my-1 mx-0.5 rounded-lg text-center mb-2 hover:shadow-md hover:shadow-blue-300"
           key={index}
         >
-          <h5 className="text-lg font-medium">{item?.userId.masjid}</h5>
+          <h5 className="text-lg font-medium text-gray-600">{item?.userId.masjid}</h5>
           <p>{item.message}</p>
           <small className="my-0.5">
             {new Date(item.createdAt).toLocaleString("en-US", {

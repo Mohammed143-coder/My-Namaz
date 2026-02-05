@@ -51,13 +51,6 @@ const Announcement = () => {
     dedupingInterval: 200000,
   });
 
-  if (isLoading) return <Loading />;
-  if (error)
-    return (
-      <div className="text-center text-red-500 py-4">
-        Failed to load announcements.
-      </div>
-    );
   useEffect(() => {
     if (Array.isArray(overallAnnouncement?.details)) {
       // Filter for 'common' announcements ONLY
@@ -71,6 +64,14 @@ const Announcement = () => {
       setAnnouncement(sorted);
     }
   }, [overallAnnouncement]);
+
+  if (isLoading) return <Loading />;
+  if (error)
+    return (
+      <div className="text-center text-red-500 py-4">
+        Failed to load announcements.
+      </div>
+    );
 
   // const allAnnouncement = async () => {
   //   try {

@@ -35,35 +35,47 @@ export default function SelectedMasjid({ userId }) {
 
   const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-  const { data: namazData, isLoading } = useSWR(
-    `/api/namaz?userId=${selectedUser}`,
-    fetcher,
-  );
+  const {
+    data: namazData,
+    isLoading,
+    error: namazError,
+  } = useSWR(`/api/namaz?userId=${selectedUser}`, fetcher);
 
-  const { data: announcementData, isLoading: announcementLoading } = useSWR(
-    `/api/announcement?userId=${selectedUser}`,
-    fetcher,
-  );
+  const {
+    data: announcementData,
+    isLoading: announcementLoading,
+    error: announcementError,
+  } = useSWR(`/api/announcement?userId=${selectedUser}`, fetcher);
 
   useEffect(() => {
-    if (namazData?.details) setSelectedMasjid(namazData.details);
-    if (announcementData?.details) {
-      // Show ALL for specific masjid? Or just important?
-      // User said "specific announcement need to visible in particular namaz timing page"
-      // Since we are fetching ?userId=..., we get ONLY that masjid's announcements.
-      // Admin posts 'important', 'jummah', 'urgent'.
-      // Developer posts 'common' (which usually has different userId, or no userId - wait, Model requires userId).
-      // Since we fetch by userId, we implicitly get only that masjid's posts.
-      // We can just show them all (as they are all specific to this masjid).
-      // But if we want to exclude "common" if a developer accidentally tagged it common?
-      // Safe to just show all retrieved by userId query.
+    if (Array.isArray(namazData?.details)) {
+      setSelectedMasjid(namazData.details);
+    } else {
+      setSelectedMasjid([]);
+    }
+
+    if (Array.isArray(announcementData?.details)) {
       setAnnouncement(announcementData.details);
+    } else {
+      setAnnouncement([]);
     }
   }, [namazData, announcementData]);
 
   const selectedMasjidName = useSelector((state) => state.auth.masjid);
 
   if (isLoading || announcementLoading) return <Loading />;
+
+  if (namazError || announcementError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-red-500 p-4 text-center">
+        <p className="text-xl font-bold mb-2">Error Loading Data</p>
+        <p>
+          There was a problem fetching the masjid coordinates. Please try again
+          later.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white min-h-screen text-gray-500 p-1 pb-10">

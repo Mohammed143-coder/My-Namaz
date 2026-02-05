@@ -25,7 +25,7 @@ const NamazTimingsForm = ({ User }) => {
       if (!User?.id) return;
       try {
         const res = await axios.get(`/api/namaz?userId=${User.id}`);
-        if (res.data && res.data.details && res.data.details.length > 0) {
+        if (Array.isArray(res.data?.details) && res.data.details.length > 0) {
           const data = res.data.details[0].namazTiming;
           // Populate state
           if (data) {
@@ -46,6 +46,7 @@ const NamazTimingsForm = ({ User }) => {
         }
       } catch (err) {
         console.error("Failed to fetch existing timings", err);
+        alert("Error fetching current timings: " + err.message);
       }
     };
     fetchCurrentTimings();

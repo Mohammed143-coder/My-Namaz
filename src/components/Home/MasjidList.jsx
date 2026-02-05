@@ -24,14 +24,20 @@ const MasjidList = ({ searchMasjid }) => {
     dedupingInterval: 200000,
   });
 
-  const masjids = data?.details || [];
-  const filteredMasjids = masjids?.filter(
+  if (isLoading) return <Loading />;
+  if (error)
+    return (
+      <div className="text-center text-red-500 py-8">
+        Failed to load masjids. Please try again later.
+      </div>
+    );
+
+  const masjids = Array.isArray(data?.details) ? data.details : [];
+  const filteredMasjids = masjids.filter(
     (item) =>
       item.masjid.toLowerCase().includes(searchMasjid.toLowerCase()) ||
-      item.masjidLocation.toLowerCase().includes(searchMasjid.toLowerCase())
+      item.masjidLocation.toLowerCase().includes(searchMasjid.toLowerCase()),
   );
-
-  if (isLoading) return <Loading />;
 
   return (
     <div className="p-2 overflow-y-auto">
@@ -120,8 +126,8 @@ const MasjidList = ({ searchMasjid }) => {
                     !isItemFavorite && favorites.length >= 3
                       ? "Maximum 3 favorites allowed"
                       : isItemFavorite
-                      ? "Remove from favorites"
-                      : "Add to favorites"
+                        ? "Remove from favorites"
+                        : "Add to favorites"
                   }
                 >
                   {isItemFavorite ? (

@@ -1,6 +1,6 @@
 import { connectDb } from "@/lib/db";
 import { Namaz } from "@/models/Namaz";
-import { NextResponse } from "next/server";
+import { apiSuccess, apiError } from "@/lib/apiResponse";
 
 connectDb();
 
@@ -9,17 +9,9 @@ export const GET = async (req) => {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
     const particularMasjid = await Namaz.find({ userId: userId });
-    return NextResponse.json({
-      message: "Masjid timing fetched sucessfully",
-      details: particularMasjid,
-      success: true,
-    });
+    return apiSuccess("Masjid timing fetched successfully", particularMasjid);
   } catch (error) {
-    return NextResponse.json({
-      message: "Failed to fetch masjid timing",
-      details: error.message,
-      success: false,
-    });
+    return apiError("Failed to fetch masjid timing", error.message);
   }
 };
 export const PUT = async (req) => {
@@ -30,18 +22,10 @@ export const PUT = async (req) => {
     const updatedTime = await Namaz.findOneAndUpdate(
       { userId },
       { $set: { namazTiming: body.namazTiming } },
-      { new: true, upsert: true }
+      { new: true, upsert: true },
     );
-    return NextResponse.json({
-      message: "Namaz timing Updated",
-      detail: updatedTime,
-      success: true,
-    });
+    return apiSuccess("Namaz timing Updated", updatedTime);
   } catch (error) {
-    return NextResponse.json({
-      message: "Failed to update namaz timing",
-      details: error.message,
-      success: false,
-    });
+    return apiError("Failed to update namaz timing", error.message);
   }
 };

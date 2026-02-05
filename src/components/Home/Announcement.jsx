@@ -50,8 +50,16 @@ const Announcement = () => {
     revalidateOnFocus: true, // re-fetch when window refocus
     dedupingInterval: 200000,
   });
+
+  if (isLoading) return <Loading />;
+  if (error)
+    return (
+      <div className="text-center text-red-500 py-4">
+        Failed to load announcements.
+      </div>
+    );
   useEffect(() => {
-    if (overallAnnouncement?.details) {
+    if (Array.isArray(overallAnnouncement?.details)) {
       // Filter for 'common' announcements ONLY
       const commonOnly = overallAnnouncement.details.filter(
         (a) => a.type === "common",
@@ -80,7 +88,6 @@ const Announcement = () => {
   // useEffect(() => {
   //   allAnnouncement();
   // }, []);
-  if (isLoading) return <Loading />;
 
   return (
     <div className="py-1 px-2 my-0.5 rounded-xl mb-2">

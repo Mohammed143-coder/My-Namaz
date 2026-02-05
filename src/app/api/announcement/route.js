@@ -1,6 +1,6 @@
 import { connectDb } from "@/lib/db";
 import { Announcement } from "@/models/Announcement";
-import { NextResponse } from "next/server";
+import { apiSuccess, apiError } from "@/lib/apiResponse";
 
 connectDb();
 export const GET = async (req) => {
@@ -8,27 +8,18 @@ export const GET = async (req) => {
     const userId = new URL(req.url).searchParams.get("userId");
     if (userId) {
       const announcement = await Announcement.find({ userId: userId });
-      return NextResponse.json({
-        message: "Announcement fetched sucessfully",
-        details: announcement,
-        success: true,
-      });
+      return apiSuccess("Announcement fetched successfully", announcement);
     }
     const announcements = await Announcement.find().populate(
       "userId",
       "masjid",
     );
-    return NextResponse.json({
-      message: "Overall announcement fetched successfully",
-      details: announcements,
-      success: true,
-    });
+    return apiSuccess(
+      "Overall announcement fetched successfully",
+      announcements,
+    );
   } catch (error) {
-    return NextResponse.json({
-      message: "Failed to fetch announcement",
-      details: error.message,
-      success: false,
-    });
+    return apiError("Failed to fetch announcement", error.message);
   }
 };
 export const POST = async (req) => {
@@ -36,17 +27,9 @@ export const POST = async (req) => {
     const { type, message, userId } = await req.json();
     const announcement = new Announcement({ type, message, userId });
     const newAnnouncement = await announcement.save();
-    return NextResponse.json({
-      message: "New Announcement created sucessfully",
-      details: newAnnouncement,
-      success: true,
-    });
+    return apiSuccess("New Announcement created successfully", newAnnouncement);
   } catch (error) {
-    return NextResponse.json({
-      message: "Failed to create new announcement",
-      details: error.message,
-      success: false,
-    });
+    return apiError("Failed to create new announcement", error.message);
   }
 };
 
@@ -57,18 +40,8 @@ export const DELETE = async (req) => {
     if (!id) throw new Error("ID required");
 
     await Announcement.findByIdAndDelete(id);
-    return NextResponse.json({
-      message: "Announcement deleted successfully",
-      success: true,
-    });
+    return apiSuccess("Announcement deleted successfully");
   } catch (error) {
-    return NextResponse.json(
-      {
-        message: "Failed to delete announcement",
-        details: error.message,
-        success: false,
-      },
-      { status: 400 },
-    );
+    return apiError("Failed to delete announcement", error.message);
   }
 };

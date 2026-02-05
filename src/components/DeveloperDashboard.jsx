@@ -23,8 +23,12 @@ export default function DeveloperDashboard({ user }) {
         axios.get("/api/user"),
       ]);
 
-      const annData = annRes.data.details || [];
-      const userData = userRes.data.details || [];
+      const annData = Array.isArray(annRes.data.details)
+        ? annRes.data.details
+        : [];
+      const userData = Array.isArray(userRes.data.details)
+        ? userRes.data.details
+        : [];
 
       setAnnouncements(annData);
       setUsers(userData);
@@ -34,6 +38,7 @@ export default function DeveloperDashboard({ user }) {
       });
     } catch (error) {
       console.error("Failed to fetch developer data", error);
+      alert("Error loading system data: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -88,12 +93,10 @@ export default function DeveloperDashboard({ user }) {
 
   return (
     <div className="min-h-screen max-h-full bg-gray-50 pattern-bg text-charcoal">
-     
-
       <div className="px-4 py-6 md:py-8 max-w-4xl mx-auto pb-14">
-         <CommonHeader className="bg-white shadow-md">
-        Developer Panel
-      </CommonHeader>
+        <CommonHeader className="bg-white shadow-md">
+          Developer Panel
+        </CommonHeader>
         <div className="flex justify-between items-center gap-2 mt-6 md:mt-8">
           <div>
             <h2 className="text-xl font-bold text-emerald-800">

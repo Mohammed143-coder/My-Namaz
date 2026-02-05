@@ -1,7 +1,7 @@
 import { connectDb } from "@/lib/db";
 import { User } from "@/models/User";
 import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server";
+import { apiSuccess, apiError } from "@/lib/apiResponse";
 import nodemailer from "nodemailer";
 
 connectDb();
@@ -14,10 +14,7 @@ export const POST = async (req) => {
     // Check if user already exists
     const existingUser = await User.findOne({ userEmail });
     if (existingUser) {
-      return NextResponse.json({
-        success: false,
-        message: "User already exists with this email",
-      });
+      return apiError("User already exists with this email");
     }
 
     // Hash password
@@ -70,24 +67,17 @@ export const POST = async (req) => {
       // Rollback: Delete the user if email fails
       await User.findByIdAndDelete(newUser._id);
 
-      return NextResponse.json({
-        success: false,
-        message:
-          "Failed to send verification email. Registration cancelled. Please try again.",
-        details: emailError.message,
-      });
+      return apiError(
+        "Failed to send verification email. Registration cancelled. Please try again.",
+        emailError.message,
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: "User created successfully. Please check your email for OTP.", // Client should look for this message to trigger OTP UI
-      details: newUser,
-    });
+    return apiSuccess(
+      "User created successfully. Please check your email for OTP.",
+      newUser,
+    );
   } catch (error) {
-    return NextResponse.json({
-      success: false,
-      message: "Failed to create user",
-      details: error.message,
-    });
+    return apiError("Failed to create user", error.message);
   }
 };

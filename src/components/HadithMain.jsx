@@ -18,23 +18,47 @@ const HadithMain = () => {
   });
 
   useEffect(() => {
-    if (data?.details) {
+    if (Array.isArray(data?.details)) {
       setHadith(data.details);
+    } else {
+      setHadith([]);
     }
   }, [data]);
+
+  if (isLoading) {
+    return (
+      <section className="text-charcoal min-h-screen max-h-full pattern-bg">
+        <div className="px-4 py-6 md:py-8 max-w-4xl mx-auto text-center">
+          <CommonHeader>Daily Hadith</CommonHeader>
+          <div className="flex items-center justify-center gap-3 text-emerald-600 py-12 mt-6 md:mt-8">
+            <BiLoader className="w-8 h-8 animate-spin" />
+            <span>Loading hadith...</span>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="text-charcoal min-h-screen max-h-full pattern-bg">
+        <div className="px-4 py-6 md:py-8 max-w-4xl mx-auto text-center">
+          <CommonHeader>Daily Hadith</CommonHeader>
+          <div className="text-red-500 py-12 mt-6 md:mt-8">
+            Failed to load daily hadith. Please try again later.
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="text-charcoal min-h-screen max-h-full pattern-bg">
       <div className="px-4 py-6 md:py-8 max-w-4xl mx-auto">
         <CommonHeader>Daily Hadith</CommonHeader>
-        
+
         <main className="mt-6 md:mt-8">
-          {isLoading ? (
-            <div className="flex items-center justify-center gap-3 text-emerald-600 py-12">
-              <BiLoader className="w-8 h-8 animate-spin" />
-              <span>Loading hadith...</span>
-            </div>
-          ) : hadith?.length > 0 ? (
+          {hadith.length > 0 ? (
             hadith.map((item, idx) => (
               <div key={idx} className="space-y-4 md:space-y-6">
                 {/* English Section */}
@@ -45,16 +69,18 @@ const HadithMain = () => {
                       Hadith of the Day
                     </h3>
                   </div>
-                  
+
                   <div className="mb-3 md:mb-4 p-3 md:p-4 bg-emerald-50 rounded-lg border-l-4 border-emerald-500">
                     <p className="text-gray-700 leading-relaxed text-sm md:text-lg break-words">
                       "{item.hadiths.english.quote}"
                     </p>
                   </div>
-                  
+
                   {item.hadiths.english.reflection && (
                     <p className="text-gray-600 text-xs md:text-sm leading-relaxed break-words">
-                      <span className="font-semibold text-emerald-700">Reflection: </span>
+                      <span className="font-semibold text-emerald-700">
+                        Reflection:{" "}
+                      </span>
                       {item.hadiths.english.reflection}
                     </p>
                   )}
@@ -67,7 +93,7 @@ const HadithMain = () => {
                       "{item.hadiths.urdu.quote}"
                     </p>
                   </div>
-                  
+
                   {item.hadiths.urdu.reflection && (
                     <p className="text-gray-600 text-sm md:text-lg leading-relaxed text-right break-words">
                       {item.hadiths.urdu.reflection}
@@ -79,17 +105,19 @@ const HadithMain = () => {
           ) : (
             <div className="card-islamic p-8 md:p-12 text-center">
               <FaMosque className="w-12 h-12 md:w-16 md:h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-sm md:text-base">No hadiths available at the moment.</p>
+              <p className="text-gray-500 text-sm md:text-base">
+                No hadiths available at the moment.
+              </p>
             </div>
           )}
         </main>
 
         <div className="mt-6 md:mt-8 text-center space-y-3 md:space-y-4 pb-12 lg:pb-6 ">
           <p className="text-gray-500 text-xs md:text-sm max-w-2xl mx-auto px-2">
-            <span className="font-semibold">Note:</span> New hadith is updated every two days. 
-            May these words inspire you in your daily life.
+            <span className="font-semibold">Note:</span> New hadith is updated
+            every two days. May these words inspire you in your daily life.
           </p>
-          
+
           <div className="md:pt-4">
             <Link
               href="https://coderzweb.vercel.app"

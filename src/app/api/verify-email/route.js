@@ -1,6 +1,6 @@
 import { connectDb } from "@/lib/db";
 import { User } from "@/models/User";
-import { NextResponse } from "next/server";
+import { apiSuccess, apiError } from "@/lib/apiResponse";
 import bcrypt from "bcryptjs";
 
 connectDb();
@@ -15,29 +15,20 @@ export const POST = async (req) => {
 
     if (!user) {
       console.log("[Verify] User not found");
-      return NextResponse.json(
-        { success: false, message: "User not found" },
-        { status: 404 },
-      );
+      return apiError("User not found", null, 404);
     }
 
     console.log(`[Verify] Stored OTP: '${user.otp}'`);
 
     if (user.isVerified) {
-      return NextResponse.json({
-        success: true,
-        message: "User already verified",
-      });
+      return apiSuccess("User already verified");
     }
 
     if (new Date() > user.otpExpires) {
       console.log(
         `[Verify] OTP Expired. Expires: ${user.otpExpires}, Now: ${new Date()}`,
       );
-      return NextResponse.json(
-        { success: false, message: "OTP expired" },
-        { status: 400 },
-      );
+      return apiError("OTP expired");
     }
 
     const isValid = String(user.otp).trim() === String(otp).trim();
@@ -45,10 +36,7 @@ export const POST = async (req) => {
       console.log(
         `[Verify] Mismatch. Stored: '${user.otp}' vs Received: '${otp}'`,
       );
-      return NextResponse.json(
-        { success: false, message: "Invalid OTP" },
-        { status: 400 },
-      );
+      return apiError("Invalid OTP");
     }
 
     user.isVerified = true;
@@ -56,18 +44,8 @@ export const POST = async (req) => {
     user.otpExpires = undefined;
     await user.save();
 
-    return NextResponse.json({
-      success: true,
-      message: "Email verified successfully",
-    });
+    return apiSuccess("Email verified successfully");
   } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Verification failed",
-        details: error.message,
-      },
-      { status: 500 },
-    );
+    return apiError("Verification failed", error.message, 500);
   }
 };

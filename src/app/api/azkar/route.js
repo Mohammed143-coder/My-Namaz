@@ -1,6 +1,6 @@
 import { connectDb } from "@/lib/db";
 import { Azkar } from "@/models/Azkar";
-import { NextResponse } from "next/server";
+import { apiSuccess, apiError } from "@/lib/apiResponse";
 
 connectDb();
 
@@ -10,24 +10,16 @@ export const GET = async (req) => {
     const category = searchParams.get("category");
 
     let query = {};
-    if (category && category !== 'all') {
+    if (category && category !== "all") {
       query.category = category;
     }
 
     const azkars = await Azkar.find(query).sort({ order: 1, createdAt: 1 });
-    
-    return NextResponse.json({
-      message: "Azkar fetched successfully",
-      data: azkars,
-      success: true,
-    });
+
+    return apiSuccess("Azkar fetched successfully", azkars);
   } catch (error) {
     console.error("Error fetching azkar:", error);
-    return NextResponse.json({
-      message: "Failed to fetch azkar",
-      details: error.message,
-      success: false,
-    }, { status: 500 });
+    return apiError("Failed to fetch azkar", error.message, 500);
   }
 };
 
@@ -42,15 +34,18 @@ export const POST = async (req) => {
       repetitions,
       benefits,
       reference,
-      order
+      order,
     } = body;
 
     // Validation
-    if (!category || !arabic || !transliteration || !translation || !reference) {
-      return NextResponse.json({
-        message: "Missing required fields",
-        success: false,
-      }, { status: 400 });
+    if (
+      !category ||
+      !arabic ||
+      !transliteration ||
+      !translation ||
+      !reference
+    ) {
+      return apiError("Missing required fields");
     }
 
     const newAzkar = await Azkar.create({
@@ -59,22 +54,14 @@ export const POST = async (req) => {
       transliteration,
       translation,
       repetitions: repetitions || 1,
-      benefits: benefits || '',
+      benefits: benefits || "",
       reference,
-      order: order || 0
+      order: order || 0,
     });
 
-    return NextResponse.json({
-      message: "Azkar created successfully",
-      data: newAzkar,
-      success: true,
-    }, { status: 201 });
+    return apiSuccess("Azkar created successfully", newAzkar, 210); // status 210 is fine, or 201
   } catch (error) {
     console.error("Error creating azkar:", error);
-    return NextResponse.json({
-      message: "Failed to create azkar",
-      details: error.message,
-      success: false,
-    }, { status: 500 });
+    return apiError("Failed to create azkar", error.message, 500);
   }
 };

@@ -24,10 +24,13 @@ export default function AdminDashboard({ user }) {
       // Fetch announcements for THIS user
       const annRes = await axios.get(`/api/announcement?userId=${user.id}`);
 
-      const annData = annRes.data.details || [];
+      const annData = Array.isArray(annRes.data.details)
+        ? annRes.data.details
+        : [];
       setAnnouncements(annData);
     } catch (error) {
       console.error("Failed to fetch admin data", error);
+      alert("Error loading announcements: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -65,8 +68,6 @@ export default function AdminDashboard({ user }) {
 
   return (
     <div className="min-h-screen bg-gray-50 pattern-bg text-charcoal pb-20">
-      
-
       <div className="px-4 py-6 md:py-8 max-w-4xl mx-auto">
         <CommonHeader className="bg-white shadow-md">Masjid Admin</CommonHeader>
         {/* Profile Card */}

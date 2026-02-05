@@ -1,6 +1,6 @@
 import { connectDb } from "@/lib/db";
 import { User } from "@/models/User";
-import { NextResponse } from "next/server";
+import { apiSuccess, apiError } from "@/lib/apiResponse";
 
 connectDb();
 export const GET = async (req) => {
@@ -9,26 +9,12 @@ export const GET = async (req) => {
     const userId = searchParams.get("userId");
     if (userId) {
       const user = await User.findById(userId).select("-password");
-      return NextResponse.json({
-        message: "User Found Sucessfully",
-        details: user,
-      });
+      return apiSuccess("User Found Successfully", user);
     }
     const users = await User.find().select("-password");
-    return NextResponse.json({
-      message: "Users Fetched sucessfully",
-      details: users,
-      success: true,
-    });
+    return apiSuccess("Users Fetched successfully", users);
   } catch (error) {
-    return NextResponse.json(
-      {
-        message: "Something went wrong",
-        details: error.message,
-        success: false,
-      },
-      { status: 400 },
-    );
+    return apiError("Something went wrong", error.message);
   }
 };
 
@@ -39,18 +25,8 @@ export const DELETE = async (req) => {
     if (!id) throw new Error("ID required");
 
     await User.findByIdAndDelete(id);
-    return NextResponse.json({
-      message: "User deleted successfully",
-      success: true,
-    });
+    return apiSuccess("User deleted successfully");
   } catch (error) {
-    return NextResponse.json(
-      {
-        message: "Failed to delete user",
-        details: error.message,
-        success: false,
-      },
-      { status: 400 },
-    );
+    return apiError("Failed to delete user", error.message);
   }
 };

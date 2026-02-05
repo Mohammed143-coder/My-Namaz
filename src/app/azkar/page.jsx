@@ -101,29 +101,31 @@ const AzkarPage = () => {
   // Category List View
   if (!selectedCategory) {
     return (
-      <div className="min-h-screen pattern-bg bg-gradient-to-b from-amber-50 to-emerald-50 pb-24 ">
+      <div className="min-h-screen bg-white pb-24 pattern-bg">
         <div className="max-w-6xl mx-auto p-4">
           {/* Header */}
           <div className="mt-6 mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" >
+            <h1 className="text-3xl md:text-4xl font-bold text-emerald-600 mb-2">
               Daily Azkar
             </h1>
           </div>
 
           {/* My Favorite Azkar Section */}
-          <div className="flex items-center justify-between bg-white/10 backdrop-blur-sm rounded-3xl p-6 mb-6">
+          <div className="flex items-center justify-between shadow-xl rounded-3xl p-6 mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-2" >
-Azkar Collections
+              <h2 className="text-2xl font-bold text-emerald-600 mb-2">
+                Azkar Collections
               </h2>
-              <p className="text-white/80 italic">Your Daily companion for remembrance of Allah</p>
+              <p className="text-gray-500 italic">
+                Your Daily companion for remembrance of Allah
+              </p>
             </div>
             <div className="text-6xl">📖</div>
           </div>
 
           {/* Azkar List Section */}
           <div className="bg-white/80 rounded-3xl pt-6 px-4 pb-6">
-            <h3 className="text-2xl font-semibold text-gray-600 mb-6" >
+            <h3 className="text-2xl font-semibold text-gray-500 mb-6">
               Azkar List
             </h3>
 
@@ -131,10 +133,9 @@ Azkar Collections
               {categories.map((cat, index) => {
                 const IconComponent = cat.icon;
                 const categoryCount = sampleAzkar.filter(
-                  (a) => a.category === cat.id
+                  (a) => a.category === cat.id,
                 ).length;
-                
-               
+
                 return (
                   <button
                     key={cat.id}
@@ -156,12 +157,10 @@ Azkar Collections
                       </div>
 
                       <div className="flex-1 text-left">
-                        <h4 className="text-lg font-semibold text-gray-800 mb-1" >
+                        <h4 className="text-lg font-semibold text-gray-600 mb-1">
                           {cat.label}
                         </h4>
-                        {/* <p className="text-sm text-gray-500">
-                          Today's reading ⭕/{totalCount}
-                        </p> */}
+
                       </div>
                     </div>
                   </button>
@@ -179,7 +178,7 @@ Azkar Collections
   const IconComponent = currentCategory?.icon || FaMosque;
 
   return (
-    <div className="min-h-screen pattern-bg pb-24">
+    <div className="min-h-screen bg-white pb-24">
       <div className="max-w-4xl mx-auto p-4">
         {/* Simple Back Button */}
         <div className="mt-4 mb-6">

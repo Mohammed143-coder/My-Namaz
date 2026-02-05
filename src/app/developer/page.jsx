@@ -1,21 +1,21 @@
-// app/developer/page.tsx
+import DeveloperDashboard from "@/components/DeveloperDashboard";
 import { cookies } from "next/headers";
-import DeveloperClient from "@/components/DeveloperClient";
-import jwt from "jsonwebtoken"; // or jose if you prefer
+import jwt from "jsonwebtoken";
 
-export default async function Developer() {
+const Developer = async () => {
   const cookieStore = await cookies();
-
   const token = cookieStore?.get("authToken")?.value;
 
   let decodedUser = null;
   if (token) {
     try {
-      decodedUser = jwt.verify(token, process.env.JWT_KEY); // verify on server
+      decodedUser = jwt.verify(token, process.env.JWT_KEY);
     } catch (err) {
       console.error("Invalid token:", err.message);
     }
   }
 
-  return <DeveloperClient user={decodedUser} />;
-}
+  return <DeveloperDashboard user={decodedUser} />;
+};
+
+export default Developer;

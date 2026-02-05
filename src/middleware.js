@@ -18,41 +18,35 @@ export function middleware(req) {
     console.log("Token verified for user:", verify.userEmail);
     
     const currentPath = req.nextUrl.pathname;
-    const isDeveloper = verify.userEmail.endsWith("dev@gmail.com");
-    const isAdmin = verify.userEmail.endsWith("@gmail.com") && !isDeveloper;
     
-    console.log("Is Developer:", isDeveloper);
-    console.log("Is Admin:", isAdmin);
-    console.log("Current Path:", currentPath);
+    // Developer Whitelist Check
+    const developerEmails = (process.env.DEVELOPER_EMAILS || "").split(",").map(e => e.trim());
+    const isDeveloper = developerEmails.includes(verify.userEmail);
     
-    // Developer users: Can access both /admin and /developer
-    if (isDeveloper) {
-      console.log("Developer access granted");
-      return NextResponse.next();
+    // Logic:
+    // 1. If accessing /developer, MUST be in whitelist.
+    if (currentPath.startsWith("/developer")) {
+        if (isDeveloper) {
+             return NextResponse.next();
+        } else {
+             console.log(`Unauthorized access to /developer by ${verify.userEmail}. Redirecting to /admin`);
+             return NextResponse.redirect(new URL("/admin", req.url));
+        }
     }
-    
-    // Admin users: Can only access /admin, redirect from /developer to /admin
-    if (isAdmin) {
-      if (currentPath.startsWith("/developer")) {
-        console.log("Admin trying to access developer page, redirecting to admin");
-        return NextResponse.redirect(new URL("/admin", req.url));
-      }
-      
-      if (currentPath.startsWith("/admin")) {
-        console.log("Admin access to admin page granted");
+
+    // 2. If accessing /admin, anyone authenticated can enter (including devs)
+    if (currentPath.startsWith("/admin")) {
         return NextResponse.next();
-      }
     }
     
-    // If user doesn't match any role, redirect to login
-    console.log("No valid role found, redirecting to login");
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.next();
     
   } catch (err) {
     console.log("Token verification failed:", err.message);
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }
+
 
 export const config = {
   matcher: [

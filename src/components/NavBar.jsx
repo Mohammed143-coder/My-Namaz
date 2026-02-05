@@ -14,13 +14,15 @@ const NavBar = () => {
   const pathname = usePathname();
   const [openModel, setOpenModel] = useState(false);
   const loggedIn = useSelector((state) => state.auth.isLoggedIn);
-  
+console.log(loggedIn,"loggedIn");
   const tabs = [
     // { label: "Home", href: "/" },
-    { label: "Azkar", href: "/azkar" },
+    // { label: "Azkar", href: "/azkar" },
     // { label: "Tasbeeh", href: "/tasbeeh" },
-    // { label: "Hadith", href: "/hadith" },
+    // { label: "Signup", href: "/signup" },
+    { label: "Fasting", href: "/fasting" },
     { label: "Calendar", href: "/calendar" },
+    // { label: "Favourite", href: "/favourite" },
   ];
 
   const adminTabs = [
@@ -42,7 +44,10 @@ const NavBar = () => {
       {/* Desktop Navigation */}
       <nav className="hidden md:flex items-center justify-between gap-4 mx-4 p-3">
         {/* Logo and Brand */}
-        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
+        <Link
+          href="/"
+          className="flex items-center gap-3 hover:opacity-80 transition"
+        >
           <div className="bg-gradient-to-br from-emerald-500 to-green-600 p-2 rounded-xl shadow-md">
             <FaMosque className="text-white w-7 h-7" />
           </div>
@@ -126,7 +131,9 @@ const NavBar = () => {
 
             {/* Main Tabs */}
             <div className="space-y-2 mb-4 pb-4 border-b border-emerald-100">
-              <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Navigation</p>
+              <p className="text-xs font-semibold text-gray-500 uppercase mb-2">
+                Navigation
+              </p>
               {tabs.map((tab) => (
                 <div
                   key={tab.href}
@@ -144,7 +151,9 @@ const NavBar = () => {
 
             {/* Admin Tabs */}
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Admin</p>
+              <p className="text-xs font-semibold text-gray-500 uppercase mb-2">
+                Admin
+              </p>
               {adminTabs.map((tab) => (
                 <div
                   key={tab.href}

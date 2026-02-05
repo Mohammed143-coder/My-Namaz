@@ -17,15 +17,15 @@ const HijriCalendar = ({ compact = false }) => {
   }
 
   return (
-    <div className="card-islamic p-6">
+    <div className="card-islamic p-6 min-h-screen overflow-y-auto">
       <div className="text-center">
-        <div className="flex items-center justify-center gap-3 mb-4">
+        {/* <div className="flex items-center justify-center gap-3 mb-4">
           <FaCalendarAlt className="w-8 h-8 text-emerald-600" />
           <h3 className="text-2xl font-bold text-gray-800">Islamic Calendar</h3>
-        </div>
+        </div> */}
         
-        <div className="bg-gradient-to-br from-emerald-500 to-green-600 text-white rounded-2xl p-8 shadow-lg">
-          <div className="text-5xl font-bold mb-2">
+        <div className="bg-gradient-to-br from-emerald-500 to-green-600 text-white rounded-2xl p-6 shadow-lg">
+          <div className="text-4xl font-bold mb-2">
             {hijriDate.day}
           </div>
           <div className="text-2xl font-semibold mb-1">

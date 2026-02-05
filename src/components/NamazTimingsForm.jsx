@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CommonHeader from "./CommonHeader";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -17,8 +17,39 @@ const NamazTimingsForm = ({ User }) => {
         namazTime: { time: "", period: "AM" },
       };
       return acc;
-    }, {})
+    }, {}),
   );
+
+  useEffect(() => {
+    const fetchCurrentTimings = async () => {
+      if (!User?.id) return;
+      try {
+        const res = await axios.get(`/api/namaz?userId=${User.id}`);
+        if (res.data && res.data.details && res.data.details.length > 0) {
+          const data = res.data.details[0].namazTiming;
+          // Populate state
+          if (data) {
+            const newTimings = {};
+            prayersWithAzanNamaz.forEach((p) => {
+              // DB keys are lowercase (fajr), map vars are TitleCase (Fajr) case-insensitive match needed or mapping
+              const dbKey = p.toLowerCase();
+              if (data[dbKey]) {
+                newTimings[p] = data[dbKey];
+              }
+            });
+            setTimingsWithAzan((prev) => ({ ...prev, ...newTimings }));
+
+            if (data.sunrise) {
+              setSunriseTime(data.sunrise);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch existing timings", err);
+      }
+    };
+    fetchCurrentTimings();
+  }, [User]);
 
   // Sunrise
   const [sunriseTime, setSunriseTime] = useState({ time: "", period: "AM" });
@@ -27,8 +58,7 @@ const NamazTimingsForm = ({ User }) => {
   const [loading, setLoading] = useState(false);
   const [savingAnnouncement, setSavingAnnouncement] = useState(false);
 
-  const isValidTime = (time) =>
-    /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time);
+  const isValidTime = (time) => /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time);
 
   const handleAzanNamazChange = (prayer, type, field, value) => {
     setTimingsWithAzan((prev) => ({
@@ -93,7 +123,7 @@ const NamazTimingsForm = ({ User }) => {
             namazTime: { time: "", period: "AM" },
           };
           return acc;
-        }, {})
+        }, {}),
       );
 
       setSunriseTime({ time: "", period: "AM" });
@@ -188,7 +218,7 @@ const NamazTimingsForm = ({ User }) => {
                             prayer,
                             "azanTime",
                             "time",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         className="w-full border-2 border-emerald-200 rounded-lg px-4 py-2.5"
@@ -200,7 +230,7 @@ const NamazTimingsForm = ({ User }) => {
                             prayer,
                             "azanTime",
                             "period",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         className="w-24 border-2 border-emerald-200 rounded-lg px-3 py-2.5"
@@ -226,7 +256,7 @@ const NamazTimingsForm = ({ User }) => {
                             prayer,
                             "namazTime",
                             "time",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         className="w-full border-2 border-emerald-200 rounded-lg px-4 py-2.5"
@@ -238,7 +268,7 @@ const NamazTimingsForm = ({ User }) => {
                             prayer,
                             "namazTime",
                             "period",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         className="w-24 border-2 border-emerald-200 rounded-lg px-3 py-2.5"

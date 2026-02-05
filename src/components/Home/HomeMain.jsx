@@ -1,25 +1,49 @@
 "use client";
 import { AiOutlineFileSearch } from "react-icons/ai";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MasjidList from "./MasjidList";
 import Announcement from "@/components/Home/Announcement";
 import UpcomingPrayer from "../UpcomingPrayer";
+import { fetchPrayerTimes } from "@/lib/prayerTimeService";
 
 const Home = () => {
   const [searchMasjid, setSearchMasjid] = useState("");
+  const [namazTiming, setNamazTiming] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const namazTiming = {
-    fajr: { time: "04:40", period: "AM" },
-    sunrise: { time: "06:00", period: "AM" },
-    zohar: { time: "12:45", period: "PM" },
-    asr: { time: "04:30", period: "PM" },
-    maghrib: { time: "06:10", period: "PM" },
-    isha: { time: "07:35", period: "PM" },
-    tahajjud: { time: "01:25", period: "AM" }
-  };
+  // Fetch prayer times on component mount
+  useEffect(() => {
+    const loadPrayerTimes = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const times = await fetchPrayerTimes();
+        setNamazTiming(times);
+      } catch (err) {
+        console.error("Failed to load prayer times:", err);
+        setError("Unable to load prayer times. Please check your connection.");
+
+        // Fallback to hardcoded times if API fails
+        setNamazTiming({
+          fajr: { time: "04:40", period: "AM" },
+          sunrise: { time: "06:00", period: "AM" },
+          zohar: { time: "12:45", period: "PM" },
+          asr: { time: "04:30", period: "PM" },
+          maghrib: { time: "06:10", period: "PM" },
+          isha: { time: "07:35", period: "PM" },
+          tahajjud: { time: "01:25", period: "AM" },
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPrayerTimes();
+  }, []);
 
   return (
-    <main className="min-h-screen text-charcoal mt-16 md:mt-20 pattern-bg pb-24">
+    <main className="min-h-screen text-charcoal mt-16 md:mt-20 bg-white pb-24 ">
       <div className="w-full px-2 md:px-4 max-w-7xl mx-auto">
         {/* Search Bar */}
         <div className="relative mt-20 md:mt-24 xl:mt-4 mb-4">
@@ -35,7 +59,14 @@ const Home = () => {
 
         {/* Upcoming Prayer */}
         <div className="mb-4">
-          <UpcomingPrayer namazTiming={namazTiming}/>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-2">
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
+          {!loading && namazTiming && (
+            <UpcomingPrayer namazTiming={namazTiming} />
+          )}
         </div>
 
         {/* Mobile: Stack vertically, Desktop: Side by side */}
@@ -47,7 +78,7 @@ const Home = () => {
                 All Masjids (Krishnagiri)
               </h5>
               {/* Scrollable container for masjid list ONLY */}
-              <div className="overflow-y-auto" style={{ maxHeight: '400px' }}>
+              <div className="overflow-y-auto" style={{ maxHeight: "400px" }}>
                 <MasjidList searchMasjid={searchMasjid} />
               </div>
             </div>
@@ -60,7 +91,10 @@ const Home = () => {
                 📢 Announcements
               </h5>
               {/* Scrollable container for announcements ONLY */}
-              <div className="overflow-y-auto p-2" style={{ maxHeight: '400px' }}>
+              <div
+                className="overflow-y-auto p-2"
+                style={{ maxHeight: "400px" }}
+              >
                 <Announcement />
               </div>
             </div>

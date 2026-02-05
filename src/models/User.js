@@ -6,9 +6,12 @@ const userSchema = new mongoose.Schema(
     userEmail: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     masjid: { type: String },
-    masjidLocation: { type: String ,unique: true},
+    masjidLocation: { type: String, unique: true },
+    otp: { type: String },
+    otpExpires: { type: Date },
+    isVerified: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 export const User =
   mongoose.models.masjidUsers || mongoose.model("masjidUsers", userSchema);

@@ -76,17 +76,13 @@ body {
 
 /* Islamic Pattern Background */
 .pattern-bg {
-  background-image:
-    repeating-linear-gradient(45deg,
-      transparent,
-      transparent 10px,
-      rgba(16, 185, 129, 0.02) 10px,
-      rgba(16, 185, 129, 0.02) 20px),
-    repeating-linear-gradient(-45deg,
-      transparent,
-      transparent 10px,
-      rgba(16, 185, 129, 0.02) 10px,
-      rgba(16, 185, 129, 0.02) 20px);
+  background-image: radial-gradient(circle, #e0e0e0 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.font-arabic {
+  font-family: 'Traditional Arabic', 'Arabic Typesetting', 'Geeza Pro', Arial, sans-serif;
+  line-height: 2;
 }
 
 /* Gradient Text */

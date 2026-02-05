@@ -37,17 +37,28 @@ export default function SelectedMasjid({ userId }) {
 
   const { data: namazData, isLoading } = useSWR(
     `/api/namaz?userId=${selectedUser}`,
-    fetcher
+    fetcher,
   );
 
   const { data: announcementData, isLoading: announcementLoading } = useSWR(
     `/api/announcement?userId=${selectedUser}`,
-    fetcher
+    fetcher,
   );
 
   useEffect(() => {
     if (namazData?.details) setSelectedMasjid(namazData.details);
-    if (announcementData?.details) setAnnouncement(announcementData.details);
+    if (announcementData?.details) {
+      // Show ALL for specific masjid? Or just important?
+      // User said "specific announcement need to visible in particular namaz timing page"
+      // Since we are fetching ?userId=..., we get ONLY that masjid's announcements.
+      // Admin posts 'important', 'jummah', 'urgent'.
+      // Developer posts 'common' (which usually has different userId, or no userId - wait, Model requires userId).
+      // Since we fetch by userId, we implicitly get only that masjid's posts.
+      // We can just show them all (as they are all specific to this masjid).
+      // But if we want to exclude "common" if a developer accidentally tagged it common?
+      // Safe to just show all retrieved by userId query.
+      setAnnouncement(announcementData.details);
+    }
   }, [namazData, announcementData]);
 
   const selectedMasjidName = useSelector((state) => state.auth.masjid);
@@ -59,10 +70,11 @@ export default function SelectedMasjid({ userId }) {
       {/* <CommonHeader>{selectedMasjidName || "Selected Masjid"}</CommonHeader> */}
 
       <div className="md:flex gap-4 mt-6">
-
         {/* LEFT — PRAYER TIMES */}
         <div className="mt-2 p-2 md:w-[50%] h-[90vh] overflow-y-auto">
-          <p className="font-semibold text-gray-600 text-xl mb-4">Today's Prayer Times</p>
+          <p className="font-semibold text-gray-600 text-xl mb-4">
+            Today's Prayer Times
+          </p>
 
           {selectedMasjid?.length > 0 ? (
             PRAYER_ORDER.map((prayerKey) => {
@@ -81,9 +93,7 @@ export default function SelectedMasjid({ userId }) {
                     <div className="bg-white border border-gray-300 rounded-lg p-1">
                       {ICON(prayerKey)}
                     </div>
-                    <span className="font-bold capitalize">
-                      {prayerKey}
-                    </span>
+                    <span className="font-bold capitalize">{prayerKey}</span>
                   </div>
 
                   {/* Sunrise Single Row */}
@@ -125,33 +135,33 @@ export default function SelectedMasjid({ userId }) {
 
         {/* RIGHT — ANNOUNCEMENTS */}
         <div className="mt-2 p-2 md:w-[50%] h-[90vh] overflow-y-auto">
-  <p className="font-semibold text-base mb-3">Masjid's Announcements</p>
+          <p className="font-semibold text-base mb-3">Masjid's Announcements</p>
 
-  {announcement?.length > 0 ? (
-    <div className="space-y-4 pb-20">
-      {announcement.map((item, index) => {
-        const isImportant = item.type === "important";
+          {announcement?.length > 0 ? (
+            <div className="space-y-4 pb-20">
+              {announcement.map((item, index) => {
+                const isImportant = item.type === "important";
 
-        return (
-          <div
-            key={index}
-            className={`border-2 p-4 shadow rounded-xl text-center transition-all hover:shadow-lg ${
-              isImportant
-                ? "border-orange-400 bg-orange-50 hover:shadow-orange-200"
-                : "border-emerald-300 bg-emerald-50 hover:shadow-emerald-200"
-            }`}
-          >
-            {/* Important Badge */}
-            {isImportant && (
-              <div className="flex items-center justify-center gap-1 mb-2">
-                <span className="text-xs lg:text-sm font-bold text-orange-600 uppercase tracking-wider px-2 py-1 bg-orange-100 rounded-full">
-                  Important
-                </span>
-              </div>
-            )}
+                return (
+                  <div
+                    key={index}
+                    className={`border-2 p-4 shadow rounded-xl text-center transition-all hover:shadow-lg ${
+                      isImportant
+                        ? "border-orange-400 bg-orange-50 hover:shadow-orange-200"
+                        : "border-emerald-300 bg-emerald-50 hover:shadow-emerald-200"
+                    }`}
+                  >
+                    {/* Important Badge */}
+                    {isImportant && (
+                      <div className="flex items-center justify-center gap-1 mb-2">
+                        <span className="text-xs lg:text-sm font-bold text-orange-600 uppercase tracking-wider px-2 py-1 bg-orange-100 rounded-full">
+                          Important
+                        </span>
+                      </div>
+                    )}
 
-            {/* Masjid Name */}
-            {/* <h5
+                    {/* Masjid Name */}
+                    {/* <h5
               className={`text-lg font-semibold mb-1 ${
                 isImportant ? "text-orange-500" : "text-gray-700"
               }`}
@@ -159,36 +169,37 @@ export default function SelectedMasjid({ userId }) {
               {item?.userId?.masjid}
             </h5> */}
 
-            {/* Announcement Message */}
-            <p
-              className={`text-sm lg:text-base leading-relaxed ${
-                isImportant
-                  ? "text-gray-600 font-semibold"
-                  : "text-gray-500 font-medium"
-              }`}
-            >
-              {item.message}
-            </p>
+                    {/* Announcement Message */}
+                    <p
+                      className={`text-sm lg:text-base leading-relaxed ${
+                        isImportant
+                          ? "text-gray-600 font-semibold"
+                          : "text-gray-500 font-medium"
+                      }`}
+                    >
+                      {item.message}
+                    </p>
 
-            {/* Timestamp */}
-            <small className="block mt-2 text-gray-500">
-              {new Date(item.createdAt).toLocaleString("en-US", {
-                hour12: true,
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
+                    {/* Timestamp */}
+                    <small className="block mt-2 text-gray-500">
+                      {new Date(item.createdAt).toLocaleString("en-US", {
+                        hour12: true,
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </small>
+                  </div>
+                );
               })}
-            </small>
-          </div>
-        );
-      })}
-    </div>
-  ) : (
-    <div className="text-center text-gray-400">No announcements found.</div>
-  )}
-</div>
-
+            </div>
+          ) : (
+            <div className="text-center text-gray-400">
+              No announcements found.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

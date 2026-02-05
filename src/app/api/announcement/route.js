@@ -2,19 +2,22 @@ import { connectDb } from "@/lib/db";
 import { Announcement } from "@/models/Announcement";
 import { NextResponse } from "next/server";
 
-connectDb()
+connectDb();
 export const GET = async (req) => {
   try {
     const userId = new URL(req.url).searchParams.get("userId");
     if (userId) {
-      const announcement = await Announcement.find({userId:userId});
+      const announcement = await Announcement.find({ userId: userId });
       return NextResponse.json({
         message: "Announcement fetched sucessfully",
         details: announcement,
         success: true,
       });
     }
-    const announcements = await Announcement.find().populate("userId", "masjid");
+    const announcements = await Announcement.find().populate(
+      "userId",
+      "masjid",
+    );
     return NextResponse.json({
       message: "Overall announcement fetched successfully",
       details: announcements,
@@ -30,7 +33,7 @@ export const GET = async (req) => {
 };
 export const POST = async (req) => {
   try {
-    const { type, message,userId } = await req.json();
+    const { type, message, userId } = await req.json();
     const announcement = new Announcement({ type, message, userId });
     const newAnnouncement = await announcement.save();
     return NextResponse.json({
@@ -44,5 +47,28 @@ export const POST = async (req) => {
       details: error.message,
       success: false,
     });
+  }
+};
+
+export const DELETE = async (req) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    if (!id) throw new Error("ID required");
+
+    await Announcement.findByIdAndDelete(id);
+    return NextResponse.json({
+      message: "Announcement deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: "Failed to delete announcement",
+        details: error.message,
+        success: false,
+      },
+      { status: 400 },
+    );
   }
 };

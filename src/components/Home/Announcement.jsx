@@ -52,12 +52,12 @@ const Announcement = () => {
   });
   useEffect(() => {
     if (overallAnnouncement?.details) {
-      // Sort announcements: important first, then by date (newest first)
-      const sorted = [...overallAnnouncement.details].sort((a, b) => {
-        // First, sort by type (important first)
-        if (a.type === "important" && b.type !== "important") return -1;
-        if (a.type !== "important" && b.type === "important") return 1;
-        // Then sort by date (newest first)
+      // Filter for 'common' announcements ONLY
+      const commonOnly = overallAnnouncement.details.filter(
+        (a) => a.type === "common",
+      );
+
+      const sorted = [...commonOnly].sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setAnnouncement(sorted);

@@ -1,9 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { HiSpeakerphone, HiTrash, HiRefresh, HiClock } from "react-icons/hi";
+import {
+  HiSpeakerphone,
+  HiTrash,
+  HiRefresh,
+  HiClock,
+  HiLogout,
+} from "react-icons/hi";
 import NamazTimingsForm from "./NamazTimingsForm";
 import CommonHeader from "./CommonHeader";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { logout } from "@/lib/userSlice/authSlice";
 
 export default function AdminDashboard({ user }) {
   const [activeTab, setActiveTab] = useState("overview");
@@ -13,6 +22,21 @@ export default function AdminDashboard({ user }) {
     message: "",
     type: "important",
   });
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    if (!confirm("Are you sure you want to logout?")) return;
+    try {
+      await axios.post("/api/logout");
+      dispatch(logout());
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed. Please try again.");
+    }
+  };
 
   // Fetch only announcements for THIS user/masjid
   // Currently api/announcement fetches ALL if no userId provided?
@@ -83,8 +107,18 @@ export default function AdminDashboard({ user }) {
               </span>
             </p>
           </div>
-          <div className="bg-emerald-50 p-3 rounded-full text-emerald-600">
-            <HiClock className="w-8 h-8" />
+          <div className="flex items-end-safe gap-6">
+            
+            <div className="bg-emerald-50 p-3 rounded-full text-emerald-600">
+              <HiClock className="w-8 h-8" />
+            </div>
+            <button
+              onClick={handleLogout}
+              className="p-3 rounded-full text-red-500 hover:bg-red-50 transition-colors flex items-center justify-center border border-red-100 shadow-sm"
+              title="Logout"
+            >
+              <HiLogout className="w-6 h-6" />
+            </button>
           </div>
         </div>
 

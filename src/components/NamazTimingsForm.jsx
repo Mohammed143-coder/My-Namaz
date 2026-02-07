@@ -72,7 +72,7 @@ const NamazTimingsForm = ({ User }) => {
   };
 
   const handleSunriseChange = (field, value) => {
-    setSunriseTime((prev) => ({ ...prev, [field]: value }));
+    setSunriseTime((prev) => ({ ...prev, [field]: value || "" }));
   };
 
   const handleSaveTimings = async (e) => {
@@ -171,7 +171,9 @@ const NamazTimingsForm = ({ User }) => {
         {/* Welcome Card */}
         <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl shadow-lg p-4 mb-6 text-white">
           <h5 className="text-xl font-bold">Welcome, {User.userName} 👋</h5>
-          <p className="text-emerald-50 text-sm mt-2">Manage your masjid timings</p>
+          <p className="text-emerald-50 text-sm mt-2">
+            Manage your masjid timings
+          </p>
         </div>
 
         {/* Timings Form */}
@@ -213,25 +215,27 @@ const NamazTimingsForm = ({ User }) => {
                       <input
                         type="text"
                         placeholder="HH:MM"
-                        value={timingsWithAzan[prayer].azanTime.time}
+                        value={timingsWithAzan[prayer]?.azanTime?.time || ""}
                         onChange={(e) =>
                           handleAzanNamazChange(
                             prayer,
                             "azanTime",
                             "time",
-                            e.target.value,
+                            e.target?.value,
                           )
                         }
                         className="w-full border-2 border-emerald-200 rounded-lg px-4 py-2.5"
                       />
                       <select
-                        value={timingsWithAzan[prayer].azanTime.period}
+                        value={
+                          timingsWithAzan[prayer]?.azanTime?.period || "AM"
+                        }
                         onChange={(e) =>
                           handleAzanNamazChange(
                             prayer,
                             "azanTime",
                             "period",
-                            e.target.value,
+                            e.target?.value,
                           )
                         }
                         className="w-24 border-2 border-emerald-200 rounded-lg px-3 py-2.5"
@@ -251,25 +255,27 @@ const NamazTimingsForm = ({ User }) => {
                       <input
                         type="text"
                         placeholder="HH:MM"
-                        value={timingsWithAzan[prayer].namazTime.time}
+                        value={timingsWithAzan[prayer]?.namazTime?.time || ""}
                         onChange={(e) =>
                           handleAzanNamazChange(
                             prayer,
                             "namazTime",
                             "time",
-                            e.target.value,
+                            e.target?.value,
                           )
                         }
                         className="w-full border-2 border-emerald-200 rounded-lg px-4 py-2.5"
                       />
                       <select
-                        value={timingsWithAzan[prayer].namazTime.period}
+                        value={
+                          timingsWithAzan[prayer]?.namazTime?.period || "AM"
+                        }
                         onChange={(e) =>
                           handleAzanNamazChange(
                             prayer,
                             "namazTime",
                             "period",
-                            e.target.value,
+                            e.target?.value,
                           )
                         }
                         className="w-24 border-2 border-emerald-200 rounded-lg px-3 py-2.5"
@@ -296,16 +302,16 @@ const NamazTimingsForm = ({ User }) => {
                     <input
                       type="text"
                       placeholder="HH:MM"
-                      value={sunriseTime.time}
+                      value={sunriseTime?.time || ""}
                       onChange={(e) =>
-                        handleSunriseChange("time", e.target.value)
+                        handleSunriseChange("time", e.target?.value)
                       }
                       className="w-full border-2 border-orange-200 rounded-lg px-4 py-2.5"
                     />
                     <select
-                      value={sunriseTime.period}
+                      value={sunriseTime?.period || "AM"}
                       onChange={(e) =>
-                        handleSunriseChange("period", e.target.value)
+                        handleSunriseChange("period", e.target?.value)
                       }
                       className="w-24 border-2 border-orange-200 rounded-lg px-3 py-2.5"
                     >
@@ -355,7 +361,6 @@ const NamazTimingsForm = ({ User }) => {
             {savingAnnouncement ? "Saving..." : "Save Announcement"}
           </button>
         </div> */}
-
       </div>
     </div>
   );

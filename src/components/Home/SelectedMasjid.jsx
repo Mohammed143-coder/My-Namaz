@@ -67,7 +67,7 @@ export default function SelectedMasjid({ userId }) {
 
   if (namazError || announcementError) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-red-500 p-4 text-center">
+      <div className="flex flex-col items-center justify-center min-h-screen text-red-500 p-4 text-center pattern-bg">
         <p className="text-xl font-bold mb-2">Error Loading Data</p>
         <p>
           There was a problem fetching the masjid coordinates. Please try again
@@ -78,14 +78,14 @@ export default function SelectedMasjid({ userId }) {
   }
 
   return (
-    <div className="bg-white min-h-screen text-gray-500 p-1 pb-10">
+    <div className="bg-white min-h-screen text-gray-500 p-1 pb-10 pattern-bg">
       {/* <CommonHeader>{selectedMasjidName || "Selected Masjid"}</CommonHeader> */}
 
       <div className="md:flex gap-4 mt-6">
         {/* LEFT — PRAYER TIMES */}
         <div className="mt-2 p-2 md:w-[50%] h-[90vh] overflow-y-auto">
-          <p className="font-semibold text-gray-600 text-xl mb-4">
-            Today's Prayer Times
+          <p className="font-semibold text-gray-600 text-center text-xl mb-4">
+            Today's Salah Times
           </p>
 
           {selectedMasjid?.length > 0 ? (

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import AzkarCard from "@/components/AzkarCard";
-import { sampleAzkar } from "@/data/azkarData";
+import { azkarData } from "@/data/azkarData";
 
 import {
   FaSun,
@@ -136,7 +136,7 @@ const AzkarPage = () => {
   // Filter azkar by selected category
   const filteredAzkar = useMemo(() => {
     if (!selectedCategory) return [];
-    return sampleAzkar.filter((azkar) => azkar.category === selectedCategory);
+    return azkarData.filter((azkar) => azkar.category === selectedCategory);
   }, [selectedCategory]);
 
   // Category List View
@@ -171,7 +171,7 @@ const AzkarPage = () => {
             <div className="space-y-3">
               {categories.map((cat, index) => {
                 const IconComponent = cat.icon;
-                const categoryCount = sampleAzkar.filter(
+                const categoryCount = azkarData.filter(
                   (a) => a.category === cat.id,
                 ).length;
 

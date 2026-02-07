@@ -1,7 +1,7 @@
 // Daily Azkar Collection - User Provided Data
 // Mapped to database schema with proper field names
 
-export const sampleAzkar = [
+export const azkarData = [
   // Morning Azkar
   {
     category: 'morning',
@@ -144,7 +144,58 @@ export const sampleAzkar = [
     benefits: 'Thanking Allah after drinking',
     reference: 'Bukhari 5458',
     order: 2
-  }
+  },
+  {
+  category: "putting-on-clothes",
+  arabic: "الْحَمْدُ لِلَّهِ الَّذِي كَسَانِي هٰذَا وَرَزَقَهُ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ",
+  transliteration: "Al-hamdu lillahil-lathee kasaani haadha wa razaqahuhu min ghayri hawlin minnee wa laa quwwah",
+  translation: "All praise is due to Allah who has clothed me with this and provided it for me without any power or strength from myself.",
+  repetitions: 1,
+  benefits: "Gratitude to Allah for provision and clothing.",
+  reference: "Ahmad, Abu Dawud",
+  order: 1
+},
+{
+  category: "entering-house",
+  arabic: "بِسْمِ اللَّهِ وَلَجْنَا وَبِسْمِ اللَّهِ خَرَجْنَا وَعَلَى اللَّهِ رَبِّنَا تَوَكَّلْنَا",
+  transliteration: "Bismillahi wa lajna wa bismillahi kharajna wa `ala Allah rabbina tawakkalna",
+  translation: "In the name of Allah we enter, and in the name of Allah we go out, and upon our Lord we rely.",
+  repetitions: 1,
+  benefits: "Seeking Allah’s protection and blessing for home entry and exit.",
+  reference: "Abu Dawud 5097, Tirmidhi 3336",
+  order: 1
+},
+{
+  category: "leaving-house",
+  arabic: "بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ وَلاَ حَوْلَ وَلاَ قُوَّةَ إِلاَّ بِاللَّهِ",
+  transliteration: "Bismillahi tawakkaltu `ala Allah wa laa hawla wa laa quwwata illa billah",
+  translation: "In the name of Allah, I place my trust in Allah, and there is no might nor power except with Allah.",
+  repetitions: 1,
+  benefits: "Seeking Allah’s protection when going out of the house.",
+  reference: "Muslim 2723",
+  order: 1
+},
+{
+  category: "safar",
+  arabic: "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ",
+  transliteration: "Subhana allathee sakhkhara lana hatha wama kunna lahu muqrineena wa inna ila rabbina lamunqaliboon",
+  translation: "Glory be to the One who has made this subservient to us, though we were unable to do this ourselves, and indeed to our Lord we will return.",
+  repetitions: 3,
+  benefits: "Seeking ease, Allah’s glory, and return protection when travelling.",
+  reference: "Abu Dawud 5076",
+  order: 1
+},
+{
+  category: "seeing-mirror",
+  arabic: "الْحَمْدُ لِلَّهِ الَّذِي خَلَقَنِي فَسَوَّانِي وَهَدَانِي وَأَسْلَمْتُ وَبِرَسُولِهِ أَمَرْتُ وَبِدِينِهِ أَسْلَمْتُ",
+  transliteration: "Alhamdu lillahil-lathee khalaqanee fa sawwaani wa hadaanee wa aslamtu wa bi Rasoolihi amartu wa bi deenihi aslamtu",
+  translation: "All praise is for Allah who created me, perfected me, guided me, made me submit, commanded me to follow His Messenger ﷺ and made me submit to His religion.",
+  repetitions: 1,
+  benefits: "Gratitude for creation and guidance upon Islam when seeing oneself.",
+  reference: "At-Tirmidhi, Ibn Majah",
+  order: 1
+}
+
 ]
 
 // Category mapping for reference
@@ -158,5 +209,12 @@ export const azkarCategories = {
   'entering-mosque': 'Entering Mosque',
   'leaving-mosque': 'Leaving Mosque',
   'eating': 'Eating Dua',
-  'drinking': 'Drinking Dua'
-}
+  'drinking': 'Drinking Dua',
+
+  // Newly added categories
+  'putting-on-clothes': 'Putting on Clothes',
+  'entering-house': 'Entering the House',
+  'leaving-house': 'Leaving the House',
+  'safar': 'Travelling (Safar)',
+  'seeing-mirror': 'Seeing Yourself in the Mirror'
+};

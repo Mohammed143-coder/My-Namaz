@@ -89,13 +89,13 @@ const HadithMain = () => {
                 {/* Urdu Section */}
                 <div className="card-islamic p-4 md:p-6">
                   <div className="mb-3 md:mb-4 p-3 md:p-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg border-2 border-gold-accent">
-                    <p className="text-gray-800 text-xl md:text-2xl lg:text-3xl leading-loose text-right arabic-text break-words">
+                    <p className="text-gray-600 text-xl md:text-2xl lg:text-3xl leading-loose text-right arabic-text break-words">
                       "{item.hadiths.urdu.quote}"
                     </p>
                   </div>
 
                   {item.hadiths.urdu.reflection && (
-                    <p className="text-gray-600 text-sm md:text-lg leading-relaxed text-right break-words">
+                    <p className="text-gray-600 text-base md:text-lg leading-relaxed text-right break-words">
                       {item.hadiths.urdu.reflection}
                     </p>
                   )}

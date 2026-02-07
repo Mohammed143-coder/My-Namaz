@@ -14,7 +14,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login(state, action) {
-      console.log("login state from redux: ", action);
+      console.log("login state from redux: ", action.payload);
       
       state.userId = action.payload.id;
       state.userName=action.payload.userName
@@ -22,7 +22,7 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
     },
     logout(state) {
-      console.log("logout state from redux: ", state);
+     
       state.userId = undefined;
       state.userEmail = undefined;
       state.isLoggedIn = false;

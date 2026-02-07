@@ -7,14 +7,14 @@ const AzkarCard = ({ azkar, index }) => {
     <div className="card-islamic p-6 fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
       {/* Arabic Text */}
       <div className="mb-4 text-center">
-        <p className="arabic-text text-4xl md:text-5xl text-emerald-700 leading-relaxed">
+        <p className="arabic-text text-3xl md:text-4xl text-emerald-700 leading-relaxed">
           {arabic}
         </p>
       </div>
 
       {/* Transliteration */}
       <div className="mb-3">
-        <p className="text-lg font-semibold text-gray-800 text-center">
+        <p className="text-base font-semibold text-gray-800 text-center">
           {transliteration}
         </p>
       </div>

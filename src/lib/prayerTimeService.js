@@ -57,13 +57,13 @@ export const fetchPrayerTimes = async (
     // Check cache first
     const now = Date.now();
     if (cachedData && cacheTimestamp && now - cacheTimestamp < CACHE_DURATION) {
-      console.log("Using cached prayer times");
+      // console.log("Using cached prayer times");
       return cachedData;
     }
 
     // Fetch from API
     const url = `${ALADHAN_API_BASE}/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=${method}&school=${school}`;
-    console.log("Fetching prayer times from Aladhan API...");
+    // console.log("Fetching prayer times from Aladhan API...");
 
     const response = await fetch(url);
 
@@ -107,14 +107,14 @@ export const fetchPrayerTimes = async (
     cachedData = prayerTimes;
     cacheTimestamp = now;
 
-    console.log("Prayer times fetched successfully:", prayerTimes);
+    // console.log("Prayer times fetched successfully:", prayerTimes);
     return prayerTimes;
   } catch (error) {
     console.error("Error fetching prayer times:", error);
 
     // Return cached data if available, even if expired
     if (cachedData) {
-      console.log("Returning expired cached data due to error");
+      // console.log("Returning expired cached data due to error");
       return cachedData;
     }
 

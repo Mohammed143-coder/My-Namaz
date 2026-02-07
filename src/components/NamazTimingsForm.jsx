@@ -166,24 +166,24 @@ const NamazTimingsForm = ({ User }) => {
   };
 
   return (
-    <div className="w-full min-h-screen pb-24 bg-gradient-to-br from-emerald-50 via-white to-blue-50">
-      <div className="max-w-5xl mx-auto px-4 py-6">
+    <div className="w-full min-h-screen pb-16 bg-gradient-to-br from-emerald-50 via-white to-blue-50 rounded-xl shadow">
+      <div className="max-w-5xl mx-auto px-3 py-6">
         {/* Welcome Card */}
-        <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl shadow-lg p-6 mb-6 text-white">
-          <h5 className="text-2xl font-bold">Welcome, {User.userName} 👋</h5>
-          <p className="text-emerald-50 mt-2">Manage your masjid timings</p>
+        <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl shadow-lg p-4 mb-6 text-white">
+          <h5 className="text-xl font-bold">Welcome, {User.userName} 👋</h5>
+          <p className="text-emerald-50 text-sm mt-2">Manage your masjid timings</p>
         </div>
 
         {/* Timings Form */}
         <form onSubmit={handleSaveTimings} className="mb-6">
-          <div className="bg-white rounded-2xl shadow-xl p-6 border border-emerald-100">
+          <div className="bg-white rounded-2xl shadow-xl p-4 border border-emerald-100">
             {/* Header */}
             <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-emerald-100">
               <div className="bg-gradient-to-br from-emerald-100 to-green-100 rounded-xl p-3">
                 <span className="text-3xl">🕌</span>
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-gray-800">
+                <h3 className="text-xl font-bold text-gray-700">
                   Prayer Timings
                 </h3>
                 <p className="text-sm text-gray-600">
@@ -199,7 +199,7 @@ const NamazTimingsForm = ({ User }) => {
                 className="mb-6 p-5 bg-gradient-to-r from-gray-50 to-emerald-50 rounded-xl border border-emerald-100 hover:shadow-md transition-shadow"
               >
                 <h4 className="text-xl font-bold text-emerald-700 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">📿</span> {prayer}
+                  <span className="text-xl">📿</span> {prayer}
                 </h4>
 
                 {/* GRID FIXED (Full Width but Properly Centered) */}
@@ -321,7 +321,7 @@ const NamazTimingsForm = ({ User }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full md:w-auto px-8 py-3.5 rounded-xl font-bold text-lg bg-gradient-to-r from-emerald-500 to-green-600 text-white"
+              className="w-full md:w-auto px-6 py-3 rounded-xl font-bold text-lg bg-gradient-to-r from-emerald-400 to-green-500 text-white"
             >
               {loading ? "Saving..." : "Save Timings"}
             </button>
@@ -329,7 +329,7 @@ const NamazTimingsForm = ({ User }) => {
         </form>
 
         {/* ANNOUNCEMENT */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 border border-blue-100 mb-6">
+        {/* <div className="bg-white rounded-2xl shadow-xl p-6 border border-blue-100 mb-6">
           <h3 className="text-xl font-bold mb-4">Announcement</h3>
 
           <textarea
@@ -350,11 +350,12 @@ const NamazTimingsForm = ({ User }) => {
           <button
             type="button"
             onClick={handleSaveAnnouncement}
-            className="mt-4 w-full md:w-auto px-8 py-3.5 rounded-xl font-bold text-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+            className="mt-4 w-full md:w-auto px-6 py-3 rounded-xl font-bold text-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
           >
             {savingAnnouncement ? "Saving..." : "Save Announcement"}
           </button>
-        </div>
+        </div> */}
+
       </div>
     </div>
   );

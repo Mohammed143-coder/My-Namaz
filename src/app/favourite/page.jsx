@@ -36,16 +36,16 @@ const FavouritePage = () => {
   );
 
   // Debug logging
-  useEffect(() => {
-    console.log("🏠 Favorite Page - Current Data:");
-    console.log("  Favorites from hook:", favorites);
-    console.log("  All masjids count:", allMasjids.length);
-    console.log("  Filtered favorites:", favoriteMasjids.length);
-    console.log(
-      "  Favorite masjids:",
-      favoriteMasjids.map((m) => ({ id: m._id, name: m.masjid })),
-    );
-  }, [favorites, allMasjids, favoriteMasjids]);
+  // useEffect(() => {
+  //   console.log("🏠 Favorite Page - Current Data:");
+  //   console.log("  Favorites from hook:", favorites);
+  //   console.log("  All masjids count:", allMasjids.length);
+  //   console.log("  Filtered favorites:", favoriteMasjids.length);
+  //   console.log(
+  //     "  Favorite masjids:",
+  //     favoriteMasjids.map((m) => ({ id: m._id, name: m.masjid })),
+  //   );
+  // }, [favorites, allMasjids, favoriteMasjids]);
 
   if (isLoading || !isLoaded) return <Loading />;
 
@@ -106,23 +106,23 @@ const FavouritePage = () => {
               {favoriteMasjids.map((masjid) => (
                 <div
                   key={masjid._id}
-                  className="card-islamic p-6 flex items-center justify-between hover:shadow-lg transition-all"
+                  className="card-islamic p-4 flex items-center justify-between hover:shadow-lg shadow-lg transition-all"
                 >
                   <div
-                    className="flex items-center gap-4 flex-1 cursor-pointer"
+                    className="flex items-center gap-4 flex-1 cursor-pointer "
                     onClick={() => {
                       dispatch(selectedMasjidName(masjid.masjid));
                       router.push(`/${masjid._id}`);
                     }}
                   >
-                    <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl shadow-lg p-4">
-                      <PiMosqueDuotone className="w-10 h-10 text-white" />
+                    <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl shadow-lg p-2">
+                      <PiMosqueDuotone className="w-8 h-8 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-emerald-800 mb-1">
+                      <h3 className="text-md font-semibold text-emerald-700 m-1">
                         {masjid.masjid}
                       </h3>
-                      <p className="text-gray-600 text-sm flex items-center gap-1">
+                      <p className="text-gray-500 text-sm flex items-center gap-1">
                         📍 {masjid.masjidLocation}
                       </p>
                     </div>

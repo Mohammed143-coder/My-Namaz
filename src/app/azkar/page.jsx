@@ -1,8 +1,8 @@
 "use client";
 import { useState, useMemo } from "react";
 import AzkarCard from "@/components/AzkarCard";
-import { sampleAzkar } from "@/data/sampleAzkar";
-import { BiChevronRight } from "react-icons/bi";
+import { sampleAzkar } from "@/data/azkarData";
+
 import {
   FaSun,
   FaMoon,
@@ -11,10 +11,14 @@ import {
   FaMosque,
   FaUtensils,
   FaGlassWhiskey,
+  FaTshirt,
+  FaPlaneDeparture,
+  FaRegSmile,
 } from "react-icons/fa";
 import { GiPrayerBeads } from "react-icons/gi";
 import { BsMegaphone } from "react-icons/bs";
-import { MdLogin, MdLogout } from "react-icons/md";
+import { MdExitToApp, MdHome, MdLogin, MdLogout } from "react-icons/md";
+import CommonHeader from "@/components/CommonHeader";
 
 const AzkarPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -90,6 +94,43 @@ const AzkarPage = () => {
       color: "from-blue-400 to-cyan-500",
       description: "Remember Allah while drinking",
     },
+
+    // Newly added categories
+    {
+      id: "putting-on-clothes",
+      label: "Putting on Clothes",
+      icon: FaTshirt,
+      color: "from-purple-500 to-fuchsia-600",
+      description: "Thank Allah for clothing",
+    },
+    {
+      id: "entering-house",
+      label: "Entering the House",
+      icon: MdHome,
+      color: "from-emerald-400 to-teal-500",
+      description: "Seek blessings when entering home",
+    },
+    {
+      id: "leaving-house",
+      label: "Leaving the House",
+      icon: MdExitToApp,
+      color: "from-orange-500 to-red-500",
+      description: "Seek Allah’s protection when going out",
+    },
+    {
+      id: "safar",
+      label: "Travelling (Safar)",
+      icon: FaPlaneDeparture,
+      color: "from-sky-500 to-blue-600",
+      description: "Duas for a safe and blessed journey",
+    },
+    {
+      id: "seeing-mirror",
+      label: "Seeing the Mirror",
+      icon: FaRegSmile,
+      color: "from-pink-400 to-rose-500",
+      description: "Gratitude for creation and appearance",
+    },
   ];
 
   // Filter azkar by selected category
@@ -105,9 +146,7 @@ const AzkarPage = () => {
         <div className="max-w-6xl mx-auto p-4">
           {/* Header */}
           <div className="mt-6 mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-emerald-600 mb-2">
-              Daily Azkar
-            </h1>
+            <CommonHeader>Daily Azkar</CommonHeader>
           </div>
 
           {/* My Favorite Azkar Section */}
@@ -116,7 +155,7 @@ const AzkarPage = () => {
               <h2 className="text-2xl font-bold text-emerald-600 mb-2">
                 Azkar Collections
               </h2>
-              <p className="text-gray-500 italic">
+              <p className="text-gray-500 italic text-sm">
                 Your Daily companion for remembrance of Allah
               </p>
             </div>
@@ -125,7 +164,7 @@ const AzkarPage = () => {
 
           {/* Azkar List Section */}
           <div className="bg-white/80 rounded-3xl pt-6 px-4 pb-6">
-            <h3 className="text-2xl font-semibold text-gray-500 mb-6">
+            <h3 className="text-xl font-semibold text-gray-600 mb-6">
               Azkar List
             </h3>
 
@@ -147,20 +186,26 @@ const AzkarPage = () => {
                         {cat.id === "morning" && "🌤️"}
                         {cat.id === "evening" && "🌙"}
                         {cat.id === "before-sleeping" && "🛏️"}
-                        {cat.id === "waking-up" && "🛏️"}
+                        {cat.id === "waking-up" && "🌅"}
                         {cat.id === "after-prayer" && "🧎"}
                         {cat.id === "after-adhan" && "🤲"}
                         {cat.id === "entering-mosque" && "🕌"}
                         {cat.id === "leaving-mosque" && "🕌"}
                         {cat.id === "eating" && "🍽️"}
                         {cat.id === "drinking" && "🥤"}
+
+                        {/* Newly added categories */}
+                        {cat.id === "putting-on-clothes" && "👕"}
+                        {cat.id === "entering-house" && "🏠"}
+                        {cat.id === "leaving-house" && "🚪"}
+                        {cat.id === "safar" && "✈️"}
+                        {cat.id === "seeing-mirror" && "🪞"}
                       </div>
 
                       <div className="flex-1 text-left">
                         <h4 className="text-lg font-semibold text-gray-600 mb-1">
                           {cat.label}
                         </h4>
-
                       </div>
                     </div>
                   </button>
@@ -192,7 +237,7 @@ const AzkarPage = () => {
 
         {/* Category Header */}
         <div
-          className={`bg-gradient-to-br ${currentCategory?.color} p-8 rounded-2xl shadow-lg text-white`}
+          className={`bg-gradient-to-br ${currentCategory?.color} p-6 rounded-2xl shadow-lg text-white`}
         >
           <div className="flex items-center gap-4">
             <div className="bg-white/20 backdrop-blur-sm p-4 rounded-2xl">

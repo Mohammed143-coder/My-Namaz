@@ -198,7 +198,7 @@ const Tasbeeh = () => {
 
           {/* 1. Arabic Text Section */}
           <div className="mb-8 text-center min-h-[120px] md:min-h-[160px] flex items-center justify-center">
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold arabic-text text-emerald-600 leading-tight py-2">
+            <h2 className="text-4xl md:text-7xl font-bold arabic-text text-emerald-600 leading-tight py-2">
               {selectedDhikr.arabic}
             </h2>
           </div>
@@ -216,7 +216,7 @@ const Tasbeeh = () => {
           {/* 3. Buttons & Counter Section */}
           <div className="flex flex-col items-center justify-center gap-8">
             {/* Main Interactive Elements */}
-            <div className="relative flex items-center justify-center gap-8 md:gap-12 w-full">
+            <div className="relative flex items-center justify-center gap-4 md:gap-10 w-full">
               {/* Decrement (Left) */}
               <button
                 onClick={decrement}

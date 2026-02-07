@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
-const MAX_REQUESTS = 100; // Max 100 requests per minute
+const MAX_REQUESTS = 60; // Max 60 requests per minute
 
 export const runtime = "nodejs";
 
@@ -12,7 +12,10 @@ export function middleware(req) {
 
   // Rate Limiting for API routes
   if (currentPath.startsWith("/api")) {
-    const ip = req.headers.get("x-forwarded-for") || req.ip || "anonymous";
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0] ||
+      req.ip ||
+      "anonymous";
     const now = Date.now();
     const rateData = rateLimitMap.get(ip) || { count: 0, startTime: now };
 
@@ -26,12 +29,18 @@ export function middleware(req) {
     rateLimitMap.set(ip, rateData);
 
     if (rateData.count > MAX_REQUESTS) {
+      console.warn(`Rate limit exceeded for IP: ${ip}`);
       return NextResponse.json(
         {
           message: "Too many requests. Please try again later.",
           success: false,
         },
-        { status: 429 },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": "60",
+          },
+        },
       );
     }
   }

@@ -50,7 +50,7 @@ export const POST = async (req) => {
         },
       });
 
-      console.log(`Attempting to send OTP to: ${userEmail}`);
+      // console.info(`Attempting to send OTP to: ${userEmail}`);
 
       const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -73,9 +73,16 @@ export const POST = async (req) => {
       );
     }
 
+    const userResponse = {
+      id: newUser._id,
+      userName: newUser.userName,
+      userEmail: newUser.userEmail,
+      masjid: newUser.masjid,
+    };
+
     return apiSuccess(
       "User created successfully. Please check your email for OTP.",
-      newUser,
+      userResponse,
     );
   } catch (error) {
     return apiError("Failed to create user", error.message);

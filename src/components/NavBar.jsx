@@ -3,23 +3,15 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaMosque } from "react-icons/fa";
-import { LuListTree } from "react-icons/lu";
 import { BiMenu, BiX } from "react-icons/bi";
-import { BsCalendar2Week } from "react-icons/bs";
-import { useSelector } from "react-redux";
 import HijriCalendar from "./HijriCalendar";
 
 const NavBar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [openModel, setOpenModel] = useState(false);
-  const loggedIn = useSelector((state) => state.auth.isLoggedIn);
-console.log(loggedIn,"loggedIn");
+  
   const tabs = [
-    // { label: "Home", href: "/" },
-    // { label: "Azkar", href: "/azkar" },
-    // { label: "Tasbeeh", href: "/tasbeeh" },
-    // { label: "Signup", href: "/signup" },
     { label: "Fasting", href: "/fasting" },
     { label: "Calendar", href: "/calendar" },
     // { label: "Favourite", href: "/favourite" },
@@ -31,11 +23,7 @@ console.log(loggedIn,"loggedIn");
   ];
 
   const handleNavClick = (href) => {
-    if (!loggedIn && (href === "/admin" || href === "/developer")) {
-      router.push("/login");
-    } else {
-      router.push(href);
-    }
+    router.push(href);
     setOpenModel(false);
   };
 

@@ -106,14 +106,13 @@ export default function FastingPage() {
                 </h4>
                 <div className="p-3 md:p-4 bg-emerald-50 rounded-lg border-l-4 border-emerald-500">
                   <p className="text-right text-2xl lg:text-3xl text-gray-800 leading-loose font-arabic mb-3">
-اللَّهُمَّ إِنِّي لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَ كَّلْتُ وَعَلَىٰ رِزْقِكَ أَفْطَرْتُ
-                  </p>
+اللَّهُمَّ أَصُومُ غَدًا لَكَ فَاغْفِرْ لِي مَا قَدَّمْتُ وَمَا أَخَّرْتُ</p>
                   <p className="text-xs md:text-sm text-gray-700 italic mb-2">
-                    <strong>Transliteration:</strong> Allahumma innī laka sumtu wa bika aamantu wa ‘alayka tawakkaltu wa ‘alā rizqika aftartu.
+                    <strong>Transliteration:</strong> Allahumma aṣūmu ghadan laka fa-ghfir lī mā qaddamtu wa mā akhkhartu
                   </p>
-                  <p className="text-xs md:text-sm text-gray-700">
+                  {/* <p className="text-xs md:text-sm text-gray-700">
                     <strong>Translation:</strong> O Allah! I fasted for You, and I believe in You, and I place my trust in You, and with Your provision I break my fast.
-                  </p>
+                  </p> */}
                 </div>
               </div>
 
@@ -129,9 +128,9 @@ export default function FastingPage() {
                   <p className="text-xs md:text-sm text-gray-700 italic mb-2">
                     <strong>Transliteration:</strong> Allahumma laka sumtu wa bika āmantu wa ‘alayka tawakkaltu wa ‘alā rizqika aftartu fa-taqabbal minni.
                   </p>
-                  <p className="text-xs md:text-sm text-gray-700">
+                  {/* <p className="text-xs md:text-sm text-gray-700">
                     <strong>Translation:</strong> O Allah, I fasted for You, I believe in You, I put my trust in You, and with Your provision I break my fast—so accept it from me.
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>

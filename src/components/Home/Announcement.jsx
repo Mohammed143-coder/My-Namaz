@@ -50,7 +50,7 @@ const Announcement = () => {
     revalidateOnFocus: true, // re-fetch when window refocus
     dedupingInterval: 200000,
   });
-
+ 
   useEffect(() => {
     if (Array.isArray(overallAnnouncement?.details)) {
       // Filter for 'common' announcements ONLY
@@ -92,7 +92,7 @@ const Announcement = () => {
 
   return (
     <div className="py-1 px-2 my-0.5 rounded-xl mb-2">
-      {announcement.length > 0 ? (
+      {announcement?.length > 0 ? (
         announcement?.map((item, index) => {
           const isImportant = item.type === "important";
           return (
@@ -124,7 +124,7 @@ const Announcement = () => {
                   isImportant ? "text-gray-800 font-medium" : "text-gray-600"
                 }`}
               >
-                {item.message}
+                {item?.message}
               </p>
               <small className="block mt-2 text-gray-500">
                 {new Date(item.createdAt).toLocaleString("en-US", {

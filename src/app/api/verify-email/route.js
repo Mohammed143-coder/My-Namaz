@@ -9,23 +9,23 @@ export const POST = async (req) => {
   try {
     const { email, otp } = await req.json();
 
-    console.log(`[Verify] Request for: ${email}, OTP: '${otp}'`);
+    // console.log(`[Verify] Request for: ${email}, OTP: '${otp}'`);
 
     const user = await User.findOne({ userEmail: email });
 
     if (!user) {
-      console.log("[Verify] User not found");
+      console.info("[Verify] User not found");
       return apiError("User not found", null, 404);
     }
 
-    console.log(`[Verify] Stored OTP: '${user.otp}'`);
+    // console.log(`[Verify] Stored OTP: '${user.otp}'`);
 
     if (user.isVerified) {
       return apiSuccess("User already verified");
     }
 
     if (new Date() > user.otpExpires) {
-      console.log(
+      console.info(
         `[Verify] OTP Expired. Expires: ${user.otpExpires}, Now: ${new Date()}`,
       );
       return apiError("OTP expired");
@@ -33,9 +33,9 @@ export const POST = async (req) => {
 
     const isValid = String(user.otp).trim() === String(otp).trim();
     if (!isValid) {
-      console.log(
-        `[Verify] Mismatch. Stored: '${user.otp}' vs Received: '${otp}'`,
-      );
+      // console.log(
+      //   `[Verify] Mismatch. Stored: '${user.otp}' vs Received: '${otp}'`,
+      // );
       return apiError("Invalid OTP");
     }
 

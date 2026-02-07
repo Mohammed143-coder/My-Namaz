@@ -67,13 +67,13 @@ export default function AdminDashboard({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pattern-bg text-charcoal pb-20">
+    <div className="min-h-screen bg-gray-50 pattern-bg text-charcoal pb-16">
       <div className="px-4 py-6 md:py-8 max-w-4xl mx-auto">
         <CommonHeader className="bg-white shadow-md">Masjid Admin</CommonHeader>
         {/* Profile Card */}
-        <div className="bg-white rounded-2xl shadow-md p-6 border-l-4 border-emerald-500 mb-8 flex items-center justify-between mt-6 ">
+        <div className="bg-white rounded-2xl shadow-md p-4 border-l-4 border-emerald-500 mb-8 flex items-center justify-between mt-6 ">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-xl font-bold text-gray-800">
               {user?.masjid || "Your Masjid"}
             </h2>
             <p className="text-gray-500">
@@ -89,7 +89,7 @@ export default function AdminDashboard({ user }) {
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-xl shadow-sm p-2 flex gap-2 mb-8 border border-gray-100">
+        <div className="bg-white rounded-xl shadow-sm p-3 flex gap-2 mb-8 border border-gray-100">
           {["timings", "announcements"].map((tab) => (
             <button
               key={tab}
@@ -112,8 +112,8 @@ export default function AdminDashboard({ user }) {
           )}
 
           {!loading && activeTab === "timings" && (
-            <div className="bg-white p-6 rounded-2xl shadow-md border-2 border-emerald-50">
-              <h2 className="text-xl font-bold mb-6 text-center text-emerald-800 border-b pb-4">
+            <div className="bg-white p-3 rounded-2xl shadow-md border-2 border-emerald-50">
+              <h2 className="text-xl font-bold mb-6 text-center text-emerald-700 border-b pb-4">
                 Update Prayer Timings
               </h2>
               <div className="max-w-lg mx-auto">
@@ -125,7 +125,7 @@ export default function AdminDashboard({ user }) {
           {!loading && activeTab === "announcements" && (
             <div className="space-y-8">
               {/* Create */}
-              <div className="bg-white p-6 rounded-2xl shadow-md border-2 border-amber-50">
+              <div className="bg-white p-4 rounded-2xl shadow-md border-2 border-amber-50">
                 <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-amber-700">
                   <HiSpeakerphone /> Post New Announcement
                 </h2>
@@ -135,7 +135,7 @@ export default function AdminDashboard({ user }) {
                 >
                   <textarea
                     required
-                    value={newAnnouncement.message}
+                    value={newAnnouncement?.message}
                     onChange={(e) =>
                       setNewAnnouncement({
                         ...newAnnouncement,
@@ -149,7 +149,7 @@ export default function AdminDashboard({ user }) {
 
                   <div className="flex gap-4">
                     <select
-                      value={newAnnouncement.type}
+                      value={newAnnouncement?.type}
                       onChange={(e) =>
                         setNewAnnouncement({
                           ...newAnnouncement,
@@ -158,9 +158,9 @@ export default function AdminDashboard({ user }) {
                       }
                       className="flex-1 border-2 border-gray-200 rounded-xl p-3 outline-emerald-500"
                     >
+                      <option value="common">Common</option>
                       <option value="important">Important</option>
                       <option value="jummah">Jummah</option>
-                      <option value="urgent">Urgent</option>
                     </select>
 
                     <button className="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 shadow-md transition-transform active:scale-95">

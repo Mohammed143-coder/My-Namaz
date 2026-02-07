@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 let isConnected = false; // 🔒 global flag
-console.log("isConnected :",isConnected)
+// console.log("isConnected :",isConnected)
 export const connectDb = async () => {
   if (isConnected) {
-    console.log("⚡ Using existing MongoDB connection");
+    console.info("⚡ Using existing MongoDB connection");
     return;
   }
 
@@ -16,7 +16,7 @@ export const connectDb = async () => {
     const db = await mongoose.connect(process.env.MONGO_DB_URI);
     isConnected = !!db.connections[0].readyState;
     
-    console.log("✅ DB connected successfully");
+    console.info("✅ DB connected successfully");
   } catch (error) {
     console.error("❌ Something went wrong connecting to MongoDB:", error);
     throw error;

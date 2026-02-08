@@ -120,7 +120,7 @@ const HadithMain = () => {
 
           <div className="md:pt-3">
             <Link
-              href="https://coderzweb.vercel.app"
+              href="https://coderzweb.in"
               target="_blank"
               className="text-emerald-600 hover:text-emerald-700 text-xs md:text-sm font-medium inline-flex items-center gap-1 transition"
             >

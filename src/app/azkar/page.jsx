@@ -164,7 +164,7 @@ const AzkarPage = () => {
 
           {/* Azkar List Section */}
           <div className="bg-white/80 rounded-3xl pt-6 px-4 pb-6">
-            <h3 className="text-xl font-semibold text-gray-600 mb-6">
+            <h3 className="text-xl font-semibold text-emerald-600 mb-6">
               Azkar List
             </h3>
 

@@ -51,7 +51,7 @@ const HijriCalendar = ({ compact = false }) => {
   return (
     <div className="card-islamic p-6 min-h-full overflow-y-auto">
       <div className="text-center">
-        <div className="bg-gradient-to-br from-emerald-500 to-green-600 text-white rounded-2xl p-6 shadow-lg">
+        {/* <div className="bg-gradient-to-br from-emerald-500 to-green-600 text-white rounded-2xl p-6 shadow-lg">
           {hijriDate.loading ? (
             <div className="animate-pulse space-y-2">
               <div className="h-10 bg-white/20 rounded w-1/4 mx-auto"></div>
@@ -67,9 +67,9 @@ const HijriCalendar = ({ compact = false }) => {
               <div className="text-xl opacity-90">{hijriDate.year} AH</div>
             </>
           )}
-        </div>
+        </div> */}
 
-        <div className="mt-6 p-4 bg-amber-50 rounded-lg border-l-4 border-emerald-500">
+        <div className="mt-2 p-4 bg-amber-50 rounded-lg border-l-4 border-emerald-500">
           <p className="text-sm text-gray-700 leading-relaxed">
             <span className="font-semibold text-emerald-700">
               Today's Date:{" "}
@@ -87,7 +87,7 @@ const HijriCalendar = ({ compact = false }) => {
             Special dates are highlighted in the monthly calendar based on
             real-time data.
           </p>
-          <div className="space-y-3">
+          {/* <div className="space-y-3">
             <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
               <p className="text-sm text-emerald-800 font-medium">
                 Month of {hijriDate.month}
@@ -102,7 +102,7 @@ const HijriCalendar = ({ compact = false }) => {
                 Track the moon phase for each day in the monthly view.
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

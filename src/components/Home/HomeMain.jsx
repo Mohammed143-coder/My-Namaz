@@ -45,17 +45,7 @@ const Home = () => {
   return (
     <main className="min-h-screen text-charcoal mt-16 md:mt-20 bg-white pb-24 ">
       <div className="w-full px-2 md:px-4 max-w-7xl mx-auto">
-        {/* Search Bar */}
-        <div className="relative mt-20 md:mt-24 xl:mt-4 mb-4">
-          <input
-            value={searchMasjid}
-            type="text"
-            className="w-full p-3 pr-10 border-2 border-emerald-300 text-charcoal rounded-xl outline-none bg-white shadow-sm transition-all focus:border-gold-accent focus:shadow-md"
-            placeholder='Search "masjid" by "name" or "location"'
-            onChange={(e) => setSearchMasjid(e.target.value)}
-          />
-          <AiOutlineFileSearch className="absolute w-5 h-5 top-4 right-4 text-emerald-600" />
-        </div>
+       
 
         {/* Upcoming Prayer */}
         <div className="mb-4">
@@ -67,6 +57,17 @@ const Home = () => {
           {!loading && namazTiming && (
             <UpcomingPrayer namazTiming={namazTiming} />
           )}
+        </div>
+         {/* Search Bar */}
+        <div className="relative mt-20 md:mt-24 xl:mt-4 mb-4">
+          <input
+            value={searchMasjid}
+            type="text"
+            className="w-full p-3 pr-10 border-2 border-emerald-300 text-charcoal rounded-xl outline-none bg-white shadow-sm transition-all focus:border-gold-accent focus:shadow-md"
+            placeholder='Search "masjid" by "name" or "location"'
+            onChange={(e) => setSearchMasjid(e.target.value)}
+          />
+          <AiOutlineFileSearch className="absolute w-5 h-5 top-4 right-4 text-emerald-600" />
         </div>
 
         {/* Mobile: Stack vertically, Desktop: Side by side */}

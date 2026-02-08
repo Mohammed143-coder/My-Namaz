@@ -10,7 +10,7 @@
 const ALADHAN_API_BASE = "https://api.aladhan.com/v1";
 const DEFAULT_CITY = "Krishnagiri";
 const DEFAULT_COUNTRY = "India";
-const DEFAULT_METHOD = 2; // ISNA - Islamic Society of North America
+const DEFAULT_METHOD = 1; 
 const DEFAULT_SCHOOL = 1; // Hanafi
 
 // Cache for storing prayer times (reduces API calls)
@@ -44,7 +44,7 @@ const convertTo12Hour = (time24) => {
  * Fetch prayer times from Aladhan API
  * @param {string} city - City name (default: Krishnagiri)
  * @param {string} country - Country name (default: India)
- * @param {number} method - Calculation method (default: 2 - ISNA)
+ * @param {number} method - Calculation method (default: 1 - ISNA)
  * @returns {Promise<object>} - Prayer times object
  */
 export const fetchPrayerTimes = async (

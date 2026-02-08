@@ -89,7 +89,7 @@ const HadithMain = () => {
                 {/* Urdu Section */}
                 <div className="card-islamic p-4 md:p-6">
                   <div className="mb-3 md:mb-4 p-3 md:p-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg border-2 border-gold-accent">
-                    <p className="text-gray-600 text-xl md:text-2xl lg:text-3xl leading-loose text-right arabic-text break-words">
+                    <p className="text-gray-600 text-xl lg:text-2xl leading-loose text-right arabic-text break-words">
                       "{item.hadiths.urdu.quote}"
                     </p>
                   </div>
@@ -112,13 +112,13 @@ const HadithMain = () => {
           )}
         </main>
 
-        <div className="mt-6 md:mt-8 text-center space-y-3 md:space-y-4 pb-12 lg:pb-6 ">
+        <div className="mt-4 md:mt-8 text-center space-y-3 md:space-y-4 pb-10 lg:pb-6 ">
           <p className="text-gray-500 text-xs md:text-sm max-w-2xl mx-auto px-2">
             <span className="font-semibold">Note:</span> New hadith is updated
             every two days. May these words inspire you in your daily life.
           </p>
 
-          <div className="md:pt-4">
+          <div className="md:pt-3">
             <Link
               href="https://coderzweb.vercel.app"
               target="_blank"

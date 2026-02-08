@@ -2,139 +2,146 @@
 
 import { useState, useEffect } from "react";
 import moment from "moment-hijri";
-import { FaChevronLeft, FaChevronRight, FaMoon } from "react-icons/fa";
-
-// Important Islamic dates (Hijri month and day)
-const ISLAMIC_EVENTS = {
-  "1-1": { name: "Islamic New Year", color: "bg-purple-100 border-purple-500" },
-  "1-10": { name: "Ashura", color: "bg-red-100 border-red-500" },
-  "3-12": { name: "Mawlid", color: "bg-green-100 border-green-500" },
-  "7-27": { name: "Isra Mi'raj", color: "bg-blue-100 border-blue-500" },
-  "8-15": { name: "Mid-Sha'ban", color: "bg-indigo-100 border-indigo-500" },
-  "9-1": { name: "Ramadan", color: "bg-emerald-200 border-emerald-600" },
-  "9-21": { name: "Laylat al-Qadr", color: "bg-yellow-100 border-yellow-600" },
-  "9-23": { name: "Laylat al-Qadr", color: "bg-yellow-100 border-yellow-600" },
-  "9-25": { name: "Laylat al-Qadr", color: "bg-yellow-100 border-yellow-600" },
-  "9-27": { name: "Laylat al-Qadr", color: "bg-amber-100 border-amber-600" },
-  "9-29": { name: "Laylat al-Qadr", color: "bg-yellow-100 border-yellow-600" },
-  "10-1": { name: "Eid al-Fitr", color: "bg-pink-100 border-pink-600" },
-  "12-9": { name: "Arafah", color: "bg-orange-100 border-orange-600" },
-  "12-10": { name: "Eid al-Adha", color: "bg-rose-100 border-rose-600" },
-};
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaMoon,
+  FaCalendarAlt,
+} from "react-icons/fa";
 
 // Moon phase calculation
 const getMoonPhase = (hijriDay) => {
-  if (hijriDay <= 3) return "🌑";
-  if (hijriDay <= 7) return "🌒";
-  if (hijriDay <= 10) return "🌓";
-  if (hijriDay <= 13) return "🌔";
-  if (hijriDay <= 17) return "🌕";
-  if (hijriDay <= 20) return "🌖";
-  if (hijriDay <= 24) return "🌗";
-  if (hijriDay <= 28) return "🌘";
+  const day = parseInt(hijriDay);
+  if (day <= 3) return "🌑";
+  if (day <= 7) return "🌒";
+  if (day <= 10) return "🌓";
+  if (day <= 13) return "🌔";
+  if (day <= 17) return "🌕";
+  if (day <= 20) return "🌖";
+  if (day <= 24) return "🌗";
+  if (day <= 28) return "🌘";
   return "🌑";
-};
-
-// Convert Arabic/Urdu numerals to English numerals
-const toEnglishNumber = (str) => {
-  const arabicNumerals = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
-  const englishNumerals = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-
-  return String(str)
-    .split("")
-    .map((char) => {
-      const index = arabicNumerals.indexOf(char);
-      return index !== -1 ? englishNumerals[index] : char;
-    })
-    .join("");
 };
 
 export default function IslamicMonthlyCalendar() {
   const [currentDate, setCurrentDate] = useState(moment());
-  const [calendarDays, setCalendarDays] = useState([]);
+  const [calendarData, setCalendarData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Configure moment-hijri to use English locale
-    moment.locale("en");
-    generateCalendar();
+    fetchCalendarData();
   }, [currentDate]);
 
-  const generateCalendar = () => {
-    const startOfMonth = moment(currentDate).startOf("iMonth");
-    const endOfMonth = moment(currentDate).endOf("iMonth");
-    const startDate = moment(startOfMonth).startOf("week");
-    const endDate = moment(endOfMonth).endOf("week");
+  const fetchCalendarData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const year = currentDate.year();
+      const month = currentDate.month() + 1; // 1-indexed
 
-    const days = [];
-    let day = moment(startDate);
+      const response = await fetch(
+        `https://api.aladhan.com/v1/calendarByCity/${year}/${month}?city=Krishnagiri&country=India&method=2`,
+      );
+      const data = await response.json();
 
-    while (day.isSameOrBefore(endDate)) {
-      days.push({
-        gregorian: day.format("D"),
-        hijri: toEnglishNumber(day.format("iD")),
-        hijriMonth: toEnglishNumber(day.format("iM")),
-        isCurrentMonth: day.isSame(currentDate, "iMonth"),
-        isToday: day.isSame(moment(), "day"),
-        date: moment(day),
-      });
-      day = day.add(1, "day");
+      if (data.code === 200) {
+        setCalendarData(data.data);
+      } else {
+        throw new Error("Failed to fetch calendar data");
+      }
+    } catch (err) {
+      console.error("Error fetching calendar:", err);
+      setError("Unable to load calendar data. Please try again later.");
+    } finally {
+      setLoading(false);
     }
-
-    setCalendarDays(days);
   };
 
   const goToPreviousMonth = () => {
-    setCurrentDate(moment(currentDate).subtract(1, "iMonth"));
+    setCurrentDate(moment(currentDate).subtract(1, "month"));
   };
 
   const goToNextMonth = () => {
-    setCurrentDate(moment(currentDate).add(1, "iMonth"));
+    setCurrentDate(moment(currentDate).add(1, "month"));
   };
 
-  const getEventForDate = (hijriMonth, hijriDay) => {
-    const key = `${hijriMonth}-${hijriDay}`;
-    return ISLAMIC_EVENTS[key];
-  };
+  // Generate the grid including padding days for the start and end of the month
+  const generateGrid = () => {
+    if (!calendarData.length) return [];
 
-  const isRamadan = (hijriMonth) => hijriMonth === "9";
+    const firstDayOfMonth = moment(currentDate).startOf("month").day(); // 0 (Sun) to 6 (Sat)
+    const daysInMonth = calendarData.length;
+
+    const grid = [];
+
+    // Add empty cells for the previous month's days
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      grid.push({ type: "empty" });
+    }
+
+    // Add current month's days
+    calendarData.forEach((dayData) => {
+      grid.push({
+        type: "day",
+        gregorian: dayData.date.gregorian,
+        hijri: dayData.date.hijri,
+        isToday: moment().format("DD-MM-YYYY") === dayData.date.gregorian.date,
+      });
+    });
+
+    // Fill the rest of the week if necessary
+    const totalCellsNeeded = Math.ceil((firstDayOfMonth + daysInMonth) / 7) * 7;
+    for (let i = grid.length; i < totalCellsNeeded; i++) {
+      grid.push({ type: "empty" });
+    }
+
+    return grid;
+  };
+  const gridDays = generateGrid();
 
   return (
-    <div className="card-islamic p-3 md:p-6">
+    <div className="card-islamic p-3 md:p-6 min-h-full">
       {/* Header */}
       <div className="mb-4 md:mb-6">
         <div className="flex items-center justify-between mb-3 md:mb-4">
           <button
             onClick={goToPreviousMonth}
-            className="p-1.5 md:p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-1.5 md:p-2 hover:bg-emerald-50 text-emerald-600 rounded-lg transition border border-transparent hover:border-emerald-200"
             aria-label="Previous month"
           >
-            <FaChevronLeft className="w-3.5 h-3.5 md:w-5 md:h-5 text-gray-600" />
+            <FaChevronLeft className="w-3.5 h-3.5 md:w-5 md:h-5" />
           </button>
 
           <div className="text-center">
             <h3 className="text-base md:text-2xl font-bold text-gray-800">
               {currentDate.locale("en").format("MMMM YYYY")}
             </h3>
-            <p className="text-xs md:text-base text-emerald-600 font-semibold">
-              {toEnglishNumber(currentDate.locale("en").format("iMMMM iYYYY"))}
-            </p>
+            {calendarData.length > 0 && (
+              <p className="text-xs md:text-base text-emerald-600 font-semibold flex items-center justify-center gap-1">
+                <FaMoon className="w-3 h-3" />
+                {calendarData[0].date.hijri.month.en} -{" "}
+                {calendarData[calendarData.length - 1].date.hijri.month.en}{" "}
+                {calendarData[0].date.hijri.year} AH
+              </p>
+            )}
           </div>
 
           <button
             onClick={goToNextMonth}
-            className="p-1.5 md:p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-1.5 md:p-2 hover:bg-emerald-50 text-emerald-600 rounded-lg transition border border-transparent hover:border-emerald-200"
             aria-label="Next month"
           >
-            <FaChevronRight className="w-3.5 h-3.5 md:w-5 md:h-5 text-gray-600" />
+            <FaChevronRight className="w-3.5 h-3.5 md:w-5 md:h-5" />
           </button>
         </div>
 
         {/* Weekday Headers */}
-        <div className="grid grid-cols-7 gap-0.5 md:gap-2 mb-2">
-          {["S", "M", "T", "W", "T", "F", "S"].map((day, idx) => (
+        <div className="grid grid-cols-7 gap-1 md:gap-2 mb-2">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, idx) => (
             <div
               key={idx}
-              className="text-center font-semibold text-gray-600 text-[10px] md:text-sm"
+              className="text-center font-bold text-emerald-700 text-[10px] md:text-sm uppercase tracking-wider"
             >
               {day}
             </div>
@@ -143,82 +150,112 @@ export default function IslamicMonthlyCalendar() {
       </div>
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-0.5 md:gap-2">
-        {calendarDays.map((dayData, index) => {
-          const event = getEventForDate(dayData.hijriMonth, dayData.hijri);
-          const moonPhase = getMoonPhase(parseInt(dayData.hijri));
-          const isRamadanMonth = isRamadan(dayData.hijriMonth);
+      {loading ? (
+        <div className="grid grid-cols-7 gap-1 md:gap-2 animate-pulse">
+          {Array.from({ length: 35 }).map((_, i) => (
+            <div key={i} className="aspect-square bg-gray-100 rounded-lg"></div>
+          ))}
+        </div>
+      ) : error ? (
+        <div className="text-center py-10 text-red-500 bg-red-50 rounded-xl border border-red-100">
+          <p>{error}</p>
+          <button
+            onClick={fetchCalendarData}
+            className="mt-2 text-sm underline"
+          >
+            Retry
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-7 gap-1 md:gap-2">
+          {gridDays.map((dayData, index) => {
+            if (dayData.type === "empty") {
+              return <div key={index} className="aspect-square"></div>;
+            }
 
-          return (
-            <div
-              key={index}
-              className={`
-                aspect-square border rounded-md md:rounded-lg p-0.5 md:p-1 text-center transition hover:shadow-md
-                ${!dayData.isCurrentMonth ? "opacity-40" : ""}
-                ${
-                  dayData.isToday
-                    ? "border-2 border-emerald-600 bg-emerald-50"
-                    : event
-                      ? event.color + " border-2"
-                      : isRamadanMonth && dayData.isCurrentMonth
-                        ? "bg-emerald-50/50 border-emerald-200"
-                        : "border-gray-200 hover:border-gray-300"
-                }
-              `}
-            >
-              <div className="flex flex-col h-full justify-between text-[8px] md:text-xs leading-none md:leading-normal">
-                <div className="flex justify-between items-start">
+            const { gregorian, hijri, isToday } = dayData;
+            const holidays = hijri.holidays || [];
+            const moonPhase = getMoonPhase(hijri.day);
+            const isRamadan = hijri.month.number === 9;
+            const isUrs = holidays?.some(h =>
+  h.toLowerCase().includes("urs")
+);
+            
+
+            return (
+              <div
+                key={index}
+                className={`
+                  relative aspect-square border rounded-md md:rounded-xl p-1 md:p-2 transition-all hover:shadow-lg group
+                  ${
+                    isToday
+                      ? "border-2 border-emerald-500 bg-emerald-50 ring-2 ring-emerald-100 ring-offset-1"
+                      : holidays.length > 0
+                        ? "bg-amber-50 border-amber-300 shadow-sm"
+                        : isRamadan
+                          ? "bg-emerald-50/30 border-emerald-100"
+                          : "border-gray-100 bg-white hover:border-emerald-200"
+                  }
+                `}
+              >
+                {/* Gregorian Day (Top Left) */}
+                <div className="absolute top-1 left-1 md:top-2 md:left-2">
                   <span
-                    className={`font-semibold ${dayData.isToday ? "text-emerald-700" : "text-gray-700"}`}
+                    className={`text-[10px] md:text-lg font-bold ${isToday ? "text-emerald-700" : "text-gray-500 group-hover:text-emerald-500"}`}
                   >
-                    {dayData.hijri}
-                   
+                    {gregorian.day}
                   </span>
-                  <span className="text-[8px] opacity-80">{moonPhase}</span>
                 </div>
 
-                <div className="text-center pt-0.5">
-                  <div
-                    className={`text-[9px] md:text-sm font-bold ${dayData.isToday ? "text-emerald-600" : "text-gray-600"}`}
-                  >
-                     {dayData.gregorian}
+                {/* Hijri Day (Bottom Right) */}
+                <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 text-right">
+                  <div className="flex flex-col items-end leading-none">
+                    <span className="text-[8px] md:text-xs text-gray-400 mb-2">
+                      {moonPhase}
+                    </span>
+                    <span
+                      className={`text-[10px] md:text-base font-bold ${isToday ? "text-emerald-600" : "text-emerald-700"}`}
+                    >
+                      {hijri.day}
+                    </span>
                   </div>
-                  {event && (
-                    <div className="text-[7px] md:text-[8px] font-semibold text-gray-700 leading-tight mt-0.5">
-                      {event.name}
-                    </div>
-                  )}
                 </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
 
-      {/* Legend */}
-      <div className="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-gray-200">
-        <h4 className="text-xs md:text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-          <FaMoon className="text-emerald-600" />
-          Legend
-        </h4>
-        <div className="grid grid-cols-2 gap-1.5 md:gap-2 text-[10px] md:text-xs">
-          <div className="flex items-center gap-1.5 md:gap-2">
-            <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-emerald-600 bg-emerald-50 rounded flex-shrink-0"></div>
-            <span className="truncate">Today</span>
+                {/* Festival / Holiday Label */}
+                {holidays.length > 0 && !isUrs && (
+                  <div className="absolute inset-0 flex items-end justify-center p-1 pointer-events-none">
+                    <div className="bg-amber-100/80 text-amber-800 text-[6px] md:text-[9px] font-bold px-1 py-0.5 rounded text-center leading-tight shadow-sm border border-amber-300 uppercase tracking-tighter">
+                      {holidays[0]}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Legend & Info */}
+      <div className="mt-6 pt-4 border-t border-gray-100 flex flex-wrap gap-4 items-center justify-between">
+        <div className="flex flex-wrap gap-3 text-[10px] md:text-xs">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 border-2 border-emerald-500 bg-emerald-50 rounded"></div>
+            <span className="text-gray-600 font-medium">Today</span>
           </div>
-          <div className="flex items-center gap-1.5 md:gap-2">
-            <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-pink-600 bg-pink-100 rounded flex-shrink-0"></div>
-            <span className="truncate">Eid</span>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 border-2 border-amber-300 bg-amber-50 rounded"></div>
+            <span className="text-gray-600 font-medium">Islamic Festival</span>
           </div>
-          <div className="flex items-center gap-1.5 md:gap-2">
-            <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-emerald-600 bg-emerald-50/50 rounded flex-shrink-0"></div>
-            <span className="truncate">Ramadan</span>
-          </div>
-          <div className="flex items-center gap-1.5 md:gap-2">
-            <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-amber-600 bg-yellow-100 rounded flex-shrink-0"></div>
-            <span className="truncate">Special Days</span>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 border border-emerald-200 bg-emerald-50/30 rounded"></div>
+            <span className="text-gray-600 font-medium">Ramadan</span>
           </div>
         </div>
+
+        {/* <div className="text-[10px] md:text-xs text-emerald-600 font-medium flex items-center gap-1 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
+          <FaCalendarAlt className="w-3 h-3" />
+          Adjustments based on Aladhan API (0 delay)
+        </div> */}
       </div>
     </div>
   );

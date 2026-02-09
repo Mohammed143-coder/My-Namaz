@@ -14,7 +14,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login(state, action) {
-      console.log("login state from redux: ", action.payload);
+
       
       state.userId = action.payload.id;
       state.userName=action.payload.userName

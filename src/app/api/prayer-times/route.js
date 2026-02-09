@@ -49,7 +49,7 @@ export async function GET(request) {
         { status: 500 },
       );
     }
-    console.log(apiKey,"apikey")
+    
 
     const url = `https://islamicapi.com/api/v1/prayer-time/?lat=${lat}&lon=${lon}&method=${method}&school=${school}&api_key=${apiKey}`;
 

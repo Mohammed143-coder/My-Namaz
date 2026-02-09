@@ -49,11 +49,12 @@ export async function GET(request) {
         { status: 500 },
       );
     }
+    console.log(apiKey,"apikey")
 
     const url = `${ISLAMICAPI_API_BASE}/prayer-time/?lat=${lat}&lon=${lon}&method=${method}&school=${school}&api_key=${apiKey}`;
 
     const response = await fetch(url, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: 1800 }, // Cache for 1/2 hour
     });
 
     if (!response.ok) {

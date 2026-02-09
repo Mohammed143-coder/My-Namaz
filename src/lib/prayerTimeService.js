@@ -15,7 +15,7 @@
 const ISLAMICAPI_API_BASE = "https://islamicapi.com/api/v1";
 const DEFAULT_METHOD = 1;
 const DEFAULT_SCHOOL = 2; // Hanafi (though the API might use it differently, keeping as is)
-const ISLAMIC_API_KEY = process.env.NEXT_PUBLIC_ISLAMICAPI_API_KEY;
+const ISLAMIC_API_KEY = process.env.ISLAMICAPI_API_KEY;
 
 // Default location for metadata if not provided
 const DEFAULT_CITY = "Krishnagiri";

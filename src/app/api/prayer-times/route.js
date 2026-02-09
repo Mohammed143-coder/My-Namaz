@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const ISLAMICAPI_API_BASE = "https://islamicapi.com/api/v1";
+
 const DEFAULT_METHOD = 1;
 const DEFAULT_SCHOOL = 2; // Hanafi
 
@@ -51,7 +51,7 @@ export async function GET(request) {
     }
     console.log(apiKey,"apikey")
 
-    const url = `${ISLAMICAPI_API_BASE}/prayer-time/?lat=${lat}&lon=${lon}&method=${method}&school=${school}&api_key=${apiKey}`;
+    const url = `https://islamicapi.com/api/v1/prayer-time/?lat=${lat}&lon=${lon}&method=${method}&school=${school}&api_key=${apiKey}`;
 
     const response = await fetch(url, {
       next: { revalidate: 1800 }, // Cache for 1/2 hour

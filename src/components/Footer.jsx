@@ -4,16 +4,16 @@ import { IoHomeOutline } from "react-icons/io5";
 import { GiPrayerBeads } from "react-icons/gi";
 import { useRouter } from "next/navigation";
 import { FaQuran } from "react-icons/fa";
-import { GrFavorite } from "react-icons/gr";
+import { PiMosqueDuotone } from "react-icons/pi";
 import { BsCalendar2Week } from "react-icons/bs";
 import { MdOutlineArticle } from "react-icons/md";
 
 const Footer = () => {
   const router = useRouter();
-  
+
   const navItems = [
     { icon: IoHomeOutline, label: "Home", route: "/" },
-    { icon: GrFavorite, label: "Favorites", route: "/favourite" },
+    { icon: PiMosqueDuotone, label: "All Masjids", route: "/all-masjids" },
     { icon: MdOutlineArticle, label: "Azkar", route: "/azkar" },
     { icon: GiPrayerBeads, label: "Tasbeeh", route: "/tasbeeh" },
     { icon: FaQuran, label: "Hadith", route: "/hadith" },

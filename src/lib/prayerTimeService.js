@@ -7,11 +7,19 @@
  * API Documentation: https://aladhan.com/prayer-times-api
  */
 
-const ALADHAN_API_BASE = "https://api.aladhan.com/v1";
+// const ALADHAN_API_BASE = "https://api.aladhan.com/v1";
+// const DEFAULT_CITY = "Krishnagiri";
+// const DEFAULT_COUNTRY = "India";
+// const DEFAULT_METHOD = 1;
+// const DEFAULT_SCHOOL = 1; // Hanafi
+const ISLAMICAPI_API_BASE = "https://islamicapi.com/api/v1";
+const DEFAULT_METHOD = 1;
+const DEFAULT_SCHOOL = 2; // Hanafi (though the API might use it differently, keeping as is)
+const ISLAMIC_API_KEY = process.env.NEXT_PUBLIC_ISLAMICAPI_API_KEY;
+
+// Default location for metadata if not provided
 const DEFAULT_CITY = "Krishnagiri";
 const DEFAULT_COUNTRY = "India";
-const DEFAULT_METHOD = 1; 
-const DEFAULT_SCHOOL = 1; // Hanafi
 
 // Cache for storing prayer times (reduces API calls)
 let cachedData = null;
@@ -41,29 +49,30 @@ const convertTo12Hour = (time24) => {
 };
 
 /**
- * Fetch prayer times from Aladhan API
+ * Fetch prayer times from IslamicAPI
  * @param {string} city - City name (default: Krishnagiri)
  * @param {string} country - Country name (default: India)
- * @param {number} method - Calculation method (default: 1 - ISNA)
+ * @param {number} method - Calculation method (default: 1)
  * @returns {Promise<object>} - Prayer times object
  */
 export const fetchPrayerTimes = async (
   city = DEFAULT_CITY,
   country = DEFAULT_COUNTRY,
   method = DEFAULT_METHOD,
-  school= DEFAULT_SCHOOL
+  school = DEFAULT_SCHOOL,
 ) => {
   try {
     // Check cache first
     const now = Date.now();
     if (cachedData && cacheTimestamp && now - cacheTimestamp < CACHE_DURATION) {
-      // console.log("Using cached prayer times");
       return cachedData;
     }
 
     // Fetch from API
-    const url = `${ALADHAN_API_BASE}/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=${method}&school=${school}`;
-    // console.log("Fetching prayer times from Aladhan API...");
+    // Using lat/lon as hardcoded in the original file for Krishnagiri
+    const lat = 12.5303521;
+    const lon = 78.2006153;
+    const url = `${ISLAMICAPI_API_BASE}/prayer-time/?lat=${lat}&lon=${lon}&method=${method}&school=${school}&api_key=${ISLAMIC_API_KEY}`;
 
     const response = await fetch(url);
 
@@ -73,11 +82,11 @@ export const fetchPrayerTimes = async (
 
     const data = await response.json();
 
-    if (data.code !== 200 || !data.data || !data.data.timings) {
+    if (data.code !== 200 || !data.data || !data.data.times) {
       throw new Error("Invalid API response format");
     }
 
-    const timings = data.data.timings;
+    const timings = data.data.times;
 
     // Transform API response to match component format
     const prayerTimes = {
@@ -97,8 +106,8 @@ export const fetchPrayerTimes = async (
       meta: {
         city,
         country,
-        timezone: data.data.meta.timezone,
-        method: data.data.meta.method.name,
+        timezone: data.data.timezone.name,
+        method: method, // API response shows "UAQ" in details, keeping it simple
         lastUpdated: new Date().toISOString(),
       },
     };

@@ -11,20 +11,20 @@ import { useDispatch } from "react-redux";
 import useSWR from "swr";
 import { useFavorites } from "@/hooks/useFavorites";
 
-const MasjidList = ({ searchMasjid }) => {
+const MasjidList = ({ searchMasjid = "", favoritesOnly = false }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { favorites, toggleFavorite, isFavorite } = useFavorites();
+  const { favorites, toggleFavorite, isFavorite, isLoaded } = useFavorites();
 
   const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-  const { data, error, isLoading, mutate } = useSWR("/api/user", fetcher, {
+  const { data, error, isLoading } = useSWR("/api/user", fetcher, {
     refreshInterval: 1000000,
     revalidateOnFocus: true,
     dedupingInterval: 200000,
   });
 
-  if (isLoading) return <Loading />;
+  if (isLoading || !isLoaded) return <Loading />;
   if (error)
     return (
       <div className="text-center text-red-500 py-8">
@@ -33,11 +33,40 @@ const MasjidList = ({ searchMasjid }) => {
     );
 
   const masjids = Array.isArray(data?.details) ? data.details : [];
-  const filteredMasjids = masjids.filter(
-    (item) =>
-      item.masjid.toLowerCase().includes(searchMasjid.toLowerCase()) ||
-      item.masjidLocation.toLowerCase().includes(searchMasjid.toLowerCase()),
-  );
+
+  // Apply filtering based on favoritesOnly and searchMasjid
+  let filteredMasjids = masjids;
+
+  if (favoritesOnly) {
+    filteredMasjids = filteredMasjids.filter((item) =>
+      favorites.includes(item._id),
+    );
+  }
+
+  if (searchMasjid) {
+    filteredMasjids = filteredMasjids.filter(
+      (item) =>
+        item.masjid.toLowerCase().includes(searchMasjid.toLowerCase()) ||
+        item.masjidLocation.toLowerCase().includes(searchMasjid.toLowerCase()),
+    );
+  }
+
+  // Handle empty state for favorites on home page
+  if (favoritesOnly && filteredMasjids.length === 0) {
+    return (
+      <div className="text-center py-8 px-4">
+        <p className="text-gray-500 mb-4 italic">
+          No favorite masjids added yet.
+        </p>
+        <button
+          onClick={() => router.push("/all-masjids")}
+          className="text-sm bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg font-medium hover:bg-emerald-200 transition"
+        >
+          Browse All Masjids
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="p-2 overflow-y-auto">
@@ -106,42 +135,44 @@ const MasjidList = ({ searchMasjid }) => {
                 >
                   <LuExternalLink className="w-5 h-5 text-emerald-600" />
                 </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFavorite(item._id);
-                  }}
-                  disabled={!isItemFavorite && favorites.length >= 3}
-                  className={`p-2 rounded-lg transition ${
-                    !isItemFavorite && favorites.length >= 3
-                      ? "opacity-40 cursor-not-allowed"
-                      : "hover:bg-red-50"
-                  }`}
-                  aria-label={
-                    isItemFavorite
-                      ? "Remove from favorites"
-                      : "Add to favorites"
-                  }
-                  title={
-                    !isItemFavorite && favorites.length >= 3
-                      ? "Maximum 3 favorites allowed"
-                      : isItemFavorite
+                {!favoritesOnly && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(item._id);
+                    }}
+                    disabled={!isItemFavorite && favorites.length >= 3}
+                    className={`p-2 rounded-lg transition ${
+                      !isItemFavorite && favorites.length >= 3
+                        ? "opacity-40 cursor-not-allowed"
+                        : "hover:bg-red-50"
+                    }`}
+                    aria-label={
+                      isItemFavorite
                         ? "Remove from favorites"
                         : "Add to favorites"
-                  }
-                >
-                  {isItemFavorite ? (
-                    <BsBookmarkHeartFill className="w-5 h-5 text-red-500" />
-                  ) : (
-                    <BsBookmarkHeart
-                      className={`w-5 h-5 ${
-                        favorites.length >= 3
-                          ? "text-gray-300"
-                          : "text-gray-500 hover:text-red-500"
-                      }`}
-                    />
-                  )}
-                </button>
+                    }
+                    title={
+                      !isItemFavorite && favorites.length >= 3
+                        ? "Maximum 3 favorites allowed"
+                        : isItemFavorite
+                          ? "Remove from favorites"
+                          : "Add to favorites"
+                    }
+                  >
+                    {isItemFavorite ? (
+                      <BsBookmarkHeartFill className="w-5 h-5 text-red-500" />
+                    ) : (
+                      <BsBookmarkHeart
+                        className={`w-5 h-5 ${
+                          favorites.length >= 3
+                            ? "text-gray-300"
+                            : "text-gray-500 hover:text-red-500"
+                        }`}
+                      />
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           );

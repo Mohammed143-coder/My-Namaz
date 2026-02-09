@@ -83,7 +83,7 @@ export default function SelectedMasjid({ userId }) {
 
       <div className="md:flex gap-4 mt-6">
         {/* LEFT — PRAYER TIMES */}
-        <div className="mt-2 p-2 md:w-[50%] h-[90vh] overflow-y-auto">
+        <div className="-mt-4 p-2 md:w-[50%] h-[90vh] overflow-y-auto">
           <p className="font-semibold text-gray-600 text-center text-xl mb-4">
             Today's Salah Times
           </p>
@@ -98,7 +98,7 @@ export default function SelectedMasjid({ userId }) {
               return (
                 <div
                   key={prayerKey}
-                  className="mb-4 border border-gray-300 rounded-2xl bg-[#F0FDF8] shadow-sm hover:shadow-md transition-shadow p-4"
+                  className="mb-4 border border-gray-300 rounded-2xl bg-emerald-50 shadow-sm hover:shadow-lg transition-shadow p-4"
                 >
                   {/* Header with icon */}
                   <div className="flex items-center gap-3 mb-3">
@@ -146,7 +146,7 @@ export default function SelectedMasjid({ userId }) {
         </div>
 
         {/* RIGHT — ANNOUNCEMENTS */}
-        <div className="mt-2 p-2 md:w-[50%] h-[90vh] overflow-y-auto">
+        <div className="mt-2 p-2 md:w-[50%] grow overflow-y-auto">
           <p className="font-semibold text-base mb-3">Masjid's Announcements</p>
 
           {announcement?.length > 0 ? (

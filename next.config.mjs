@@ -29,11 +29,16 @@ const nextConfig = {
             value: "max-age=31536000; includeSubDomains; preload",
           },
           // Content Security Policy
-          {
-            key: "Content-Security-Policy",
-            value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.aladhan.com;",
-          },
+         {
+  key: "Content-Security-Policy",
+  value:
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data:; " +
+    "connect-src 'self' https://api.aladhan.com https://islamicapi.com;",
+},
+
         ],
       },
     ];

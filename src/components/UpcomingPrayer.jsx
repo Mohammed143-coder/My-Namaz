@@ -106,7 +106,7 @@ const UpcomingPrayer = ({ namazTiming }) => {
   if (!status) return <Loading />;
 
   return (
-    <div className="p-6 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl text-gray-600 shadow-xl my-2 card-islamic border-none">
+    <div className="p-4 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl text-gray-600 shadow-2xl my-2 card-islamic border-none">
       <div className="text-center">
         <h3 className="text-xl font-bold mb-4 flex items-center justify-center gap-2">
           <FaClock className="w-5 h-5" />
@@ -115,7 +115,7 @@ const UpcomingPrayer = ({ namazTiming }) => {
 
         <div className="grid grid-cols-2 gap-4 mb-4">
           {/* Current Prayer */}
-          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3">
             <p className="text-xs uppercase tracking-wide opacity-90 mb-1">
               Current
             </p>
@@ -128,7 +128,7 @@ const UpcomingPrayer = ({ namazTiming }) => {
           </div>
 
           {/* Next Prayer */}
-          <div className="bg-amber-400 rounded-xl p-4 shadow-md">
+          <div className="bg-amber-400 rounded-xl p-3 shadow-md">
             <p className="text-xs uppercase tracking-wide opacity-90 mb-1">
               Next
             </p>

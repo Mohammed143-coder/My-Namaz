@@ -1,21 +1,9 @@
 /**
- * Prayer Time Service using Aladhan API
+ * Prayer Time Service
  *
- * Aladhan API is a free, trusted, and secure Islamic prayer times service
- * that supports global locations including India.
- *
- * API Documentation: https://aladhan.com/prayer-times-api
+ * This service fetches prayer times from an internal API route
+ * which securely accesses the IslamicAPI on the server-side.
  */
-
-// const ALADHAN_API_BASE = "https://api.aladhan.com/v1";
-// const DEFAULT_CITY = "Krishnagiri";
-// const DEFAULT_COUNTRY = "India";
-// const DEFAULT_METHOD = 1;
-// const DEFAULT_SCHOOL = 1; // Hanafi
-const ISLAMICAPI_API_BASE = "https://islamicapi.com/api/v1";
-const DEFAULT_METHOD = 1;
-const DEFAULT_SCHOOL = 2; // Hanafi (though the API might use it differently, keeping as is)
-const ISLAMIC_API_KEY = process.env.ISLAMICAPI_API_KEY;
 
 // Default location for metadata if not provided
 const DEFAULT_CITY = "Krishnagiri";
@@ -27,39 +15,14 @@ let cacheTimestamp = null;
 const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
 
 /**
- * Convert 24-hour time format (HH:MM) to 12-hour format with period
- * @param {string} time24 - Time in 24-hour format (e.g., "13:45")
- * @returns {object} - { time: "01:45", period: "PM" }
- */
-const convertTo12Hour = (time24) => {
-  if (!time24) return { time: "00:00", period: "AM" };
-
-  const [hours24, minutes] = time24.split(":");
-  let hours = parseInt(hours24, 10);
-  const period = hours >= 12 ? "PM" : "AM";
-
-  // Convert to 12-hour format
-  if (hours === 0) hours = 12;
-  else if (hours > 12) hours -= 12;
-
-  return {
-    time: `${String(hours).padStart(2, "0")}:${minutes}`,
-    period,
-  };
-};
-
-/**
- * Fetch prayer times from IslamicAPI
+ * Fetch prayer times from internal API route
  * @param {string} city - City name (default: Krishnagiri)
  * @param {string} country - Country name (default: India)
- * @param {number} method - Calculation method (default: 1)
  * @returns {Promise<object>} - Prayer times object
  */
 export const fetchPrayerTimes = async (
   city = DEFAULT_CITY,
   country = DEFAULT_COUNTRY,
-  method = DEFAULT_METHOD,
-  school = DEFAULT_SCHOOL,
 ) => {
   try {
     // Check cache first
@@ -68,62 +31,31 @@ export const fetchPrayerTimes = async (
       return cachedData;
     }
 
-    // Fetch from API
-    // Using lat/lon as hardcoded in the original file for Krishnagiri
-    const lat = 12.5303521;
-    const lon = 78.2006153;
-    const url = `${ISLAMICAPI_API_BASE}/prayer-time/?lat=${lat}&lon=${lon}&method=${method}&school=${school}&api_key=${ISLAMIC_API_KEY}`;
-
-    const response = await fetch(url);
+    // Fetch from internal API route (keeps API key secure on server)
+    const response = await fetch(
+      `/api/prayer-times?city=${city}&country=${country}`,
+    );
 
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);
     }
 
-    const data = await response.json();
+    const prayerTimes = await response.json();
 
-    if (data.code !== 200 || !data.data || !data.data.times) {
-      throw new Error("Invalid API response format");
+    if (prayerTimes.error) {
+      throw new Error(prayerTimes.error);
     }
-
-    const timings = data.data.times;
-
-    // Transform API response to match component format
-    const prayerTimes = {
-      fajr: convertTo12Hour(timings.Fajr),
-      sunrise: convertTo12Hour(timings.Sunrise),
-      zohar: convertTo12Hour(timings.Dhuhr), // Dhuhr is Zohar
-      asr: convertTo12Hour(timings.Asr),
-      maghrib: convertTo12Hour(timings.Maghrib),
-      isha: convertTo12Hour(timings.Isha),
-      tahajjud: convertTo12Hour(timings.Lastthird), // Last third of night for Tahajjud
-
-      // Additional times for fasting
-      imsak: convertTo12Hour(timings.Imsak), // Sehri time (stop eating before Fajr)
-
-      // Metadata
-      date: data.data.date,
-      meta: {
-        city,
-        country,
-        timezone: data.data.timezone.name,
-        method: method, // API response shows "UAQ" in details, keeping it simple
-        lastUpdated: new Date().toISOString(),
-      },
-    };
 
     // Cache the result
     cachedData = prayerTimes;
     cacheTimestamp = now;
 
-    // console.log("Prayer times fetched successfully:", prayerTimes);
     return prayerTimes;
   } catch (error) {
     console.error("Error fetching prayer times:", error);
 
     // Return cached data if available, even if expired
     if (cachedData) {
-      // console.log("Returning expired cached data due to error");
       return cachedData;
     }
 

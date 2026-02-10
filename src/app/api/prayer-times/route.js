@@ -10,11 +10,11 @@ export async function GET(request) {
   const school = searchParams.get("school") || "1";
 
   // Sanitize the API key using .trim() to avoid accidental whitespace from Vercel
-  const apiKey = (process.env.ISLAMICAPI_API_KEY || "").trim();
+  const rawKey = process.env.ISLAMICAPI_API_KEY || "";
+  const apiKey = rawKey.trim();
 
   // 1. Check for API Key
   if (!apiKey) {
-    console.error("ISLAMICAPI_API_KEY is missing in environment variables.");
     return NextResponse.json(
       {
         error: "Configuration Error: ISLAMIC_API_KEY is not defined.",
@@ -26,7 +26,15 @@ export async function GET(request) {
     );
   }
 
-  // 2. Handle City/Country format (Mapping known cities to lat/lon)
+  // Debug info (safe version)
+  const keyDebug = {
+    length: apiKey.length,
+    prefix: apiKey.substring(0, 3) + "...",
+    suffix: "..." + apiKey.substring(apiKey.length - 3),
+    hasWhitespace: rawKey !== apiKey,
+  };
+
+  // 2. Handle City/Country format
   if (!lat && !lon && city && country) {
     if (
       city.toLowerCase() === "krishnagiri" &&
@@ -57,27 +65,41 @@ export async function GET(request) {
   }
 
   try {
+    // Some APIs are sensitive to the trailing slash or parameter order
     const apiUrl = `https://islamicapi.com/api/v1/prayer-time/?lat=${lat}&lon=${lon}&method=${method}&school=${school}&api_key=${apiKey}`;
 
-    // Adding User-Agent to avoid 403 Forbidden from some API WAFs
     const response = await fetch(apiUrl, {
+      method: "GET",
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         Accept: "application/json",
+        "Cache-Control": "no-cache",
       },
+      cache: "no-store",
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
+      const rawText = await response.text().catch(() => "No response body");
+      let errorData = {};
+      try {
+        errorData = JSON.parse(rawText);
+      } catch (e) {
+        errorData = { raw: rawText };
+      }
+
       return NextResponse.json(
         {
           error:
             errorData.message ||
             `External API failed with status ${response.status}`,
           status: response.status,
-          debug:
-            "If you get 403, check if your IslamicAPI key allows requests from server environments like Vercel.",
+          apiResponse: errorData,
+          keyDebug: keyDebug,
+          diagnostics: {
+            urlBase: "https://islamicapi.com/api/v1/prayer-time/",
+            paramsUsed: { lat, lon, method, school },
+          },
         },
         { status: response.status },
       );
@@ -100,7 +122,7 @@ export async function GET(request) {
       };
     };
 
-    const normalizedData = {
+    return NextResponse.json({
       fajr: convertTo12Hour(times.Fajr),
       sunrise: convertTo12Hour(times.Sunrise),
       zohar: convertTo12Hour(times.Dhuhr),
@@ -110,13 +132,14 @@ export async function GET(request) {
       tahajjud: convertTo12Hour(times.Lastthird),
       imsak: convertTo12Hour(times.Imsak),
       metadata: rawData.data.date,
-    };
-
-    return NextResponse.json(normalizedData);
+    });
   } catch (error) {
-    console.error("Error proxying prayer times:", error);
     return NextResponse.json(
-      { error: "Internal Server Error", message: error.message },
+      {
+        error: "Internal Server Error",
+        message: error.message,
+        keyDebug: keyDebug,
+      },
       { status: 500 },
     );
   }

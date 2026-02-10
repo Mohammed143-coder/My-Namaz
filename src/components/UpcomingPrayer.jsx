@@ -59,7 +59,7 @@ const getPrayerStatus = (namazTiming) => {
   if (!upcoming) {
     current = prayerTimes[prayerTimes.length - 1];
     upcoming = prayerTimes[0];
-    upcoming.time.setDate(upcoming.time.getDate() + 1);
+    upcoming?.time.setDate(upcoming.time.getDate() + 1);
   }
 
   return { current, upcoming };
@@ -94,7 +94,7 @@ const UpcomingPrayer = ({ namazTiming }) => {
 
     const { current, upcoming } = getPrayerStatus(namazTiming);
     setStatus({ current, upcoming });
-    setCountdown(formatTimeDiff(upcoming.time));
+    setCountdown(formatTimeDiff(upcoming?.time));
 
     const interval = setInterval(() => {
       setCountdown(formatTimeDiff(upcoming.time));
@@ -120,9 +120,9 @@ const UpcomingPrayer = ({ namazTiming }) => {
               Current
             </p>
             <div className="flex items-center justify-center gap-2">
-              {getPrayerIcon(status.current.prayer)}
+              {getPrayerIcon(status?.current?.prayer)}
               <p className="text-lg font-bold capitalize">
-                {status.current.prayer}
+                {status.current?.prayer}
               </p>
             </div>
           </div>
@@ -133,9 +133,9 @@ const UpcomingPrayer = ({ namazTiming }) => {
               Next
             </p>
             <div className="flex items-center justify-center gap-2">
-              {getPrayerIcon(status.upcoming.prayer)}
+              {getPrayerIcon(status.upcoming?.prayer)}
               <p className="text-lg font-bold capitalize">
-                {status.upcoming.prayer}
+                {status.upcoming?.prayer}
               </p>
             </div>
           </div>

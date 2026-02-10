@@ -6,23 +6,30 @@
  */
 
 // Default location for metadata if not provided
-const DEFAULT_CITY = "Krishnagiri";
-const DEFAULT_COUNTRY = "India";
+const latitude = "12.5303521";
+const longitude = "78.2006153";
+const Islamicmethod = "1";
+const IslamicSchool = "1";
 
 // Cache for storing prayer times (reduces API calls)
 let cachedData = null;
 let cacheTimestamp = null;
+
 const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
 
 /**
  * Fetch prayer times from internal API route
- * @param {string} city - City name (default: Krishnagiri)
- * @param {string} country - Country name (default: India)
+ * @param {string} lat - Latitude
+ * @param {string} lon - Longitude
+ * @param {string} method - Calculation method
+ * @param {string} school - Madhab school
  * @returns {Promise<object>} - Prayer times object
  */
 export const fetchPrayerTimes = async (
-  city = DEFAULT_CITY,
-  country = DEFAULT_COUNTRY,
+  lat = latitude,
+  lon = longitude,
+  method = Islamicmethod,
+  school = IslamicSchool,
 ) => {
   try {
     // Check cache first
@@ -33,7 +40,7 @@ export const fetchPrayerTimes = async (
 
     // Fetch from internal API route (keeps API key secure on server)
     const response = await fetch(
-      `/api/prayer-times?city=${city}&country=${country}`,
+      `/api/prayer-times?lat=${lat}&lon=${lon}&method=${method}&school=${school}`,
     );
 
     if (!response.ok) {
@@ -41,6 +48,7 @@ export const fetchPrayerTimes = async (
     }
 
     const prayerTimes = await response.json();
+    
 
     if (prayerTimes.error) {
       throw new Error(prayerTimes.error);

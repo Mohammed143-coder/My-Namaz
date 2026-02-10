@@ -2,7 +2,7 @@
  * Prayer Time Service
  *
  * This service fetches prayer times from an internal API route
- * which securely accesses the IslamicAPI on the server-side.
+ * with an automatic fallback to direct client-side fetching if blocked.
  */
 
 // Default location for metadata if not provided
@@ -18,11 +18,39 @@ let cacheTimestamp = null;
 const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
 
 /**
+ * Normalizes IslamicAPI raw data format to the frontend's expected format
+ */
+const normalizeData = (data) => {
+  if (!data || !data.data || !data.data.times) return null;
+
+  const times = data.data.times;
+  const convertTo12Hour = (time24) => {
+    if (!time24) return null;
+    let [hours, minutes] = time24.split(":");
+    hours = parseInt(hours);
+    const period = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    return {
+      time: `${String(hours).padStart(2, "0")}:${minutes}`,
+      period: period,
+    };
+  };
+
+  return {
+    fajr: convertTo12Hour(times.Fajr),
+    sunrise: convertTo12Hour(times.Sunrise),
+    zohar: convertTo12Hour(times.Dhuhr),
+    asr: convertTo12Hour(times.Asr),
+    maghrib: convertTo12Hour(times.Maghrib),
+    isha: convertTo12Hour(times.Isha),
+    tahajjud: convertTo12Hour(times.Lastthird),
+    imsak: convertTo12Hour(times.Imsak),
+    metadata: data.data.date,
+  };
+};
+
+/**
  * Fetch prayer times from internal API route
- * @param {string} lat - Latitude
- * @param {string} lon - Longitude
- * @param {string} method - Calculation method
- * @param {string} school - Madhab school
  * @returns {Promise<object>} - Prayer times object
  */
 export const fetchPrayerTimes = async (
@@ -38,21 +66,45 @@ export const fetchPrayerTimes = async (
       return cachedData;
     }
 
-    // Fetch from internal API route (keeps API key secure on server)
-    const response = await fetch(
-      `/api/prayer-times?lat=${lat}&lon=${lon}&method=${method}&school=${school}`,
-    );
+    let prayerTimes;
 
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
+    // STEP 1: Try internal API proxy (Server-side)
+    try {
+      const response = await fetch(
+        `/api/prayer-times?lat=${lat}&lon=${lon}&method=${method}&school=${school}`,
+      );
+
+      if (response.ok) {
+        prayerTimes = await response.json();
+      } else if (response.status === 403 || response.status === 500) {
+        // STEP 2 Fallback: Fetch directly from client if proxy is blocked
+        console.warn(
+          "Proxy blocked or misconfigured, attempting direct client fetch...",
+        );
+
+        const apiKey = process.env.NEXT_PUBLIC_ISLAMICAPI_API_KEY;
+        if (!apiKey) throw new Error("Missing NEXT_PUBLIC_ISLAMICAPI_API_KEY");
+
+        const directUrl = `https://islamicapi.com/api/v1/prayer-time/?lat=${lat}&lon=${lon}&method=${method}&school=${school}&api_key=${apiKey}`;
+        const directResponse = await fetch(directUrl);
+
+        if (!directResponse.ok) {
+          throw new Error(
+            `Direct API call failed with status ${directResponse.status}`,
+          );
+        }
+
+        const rawData = await directResponse.json();
+        prayerTimes = normalizeData(rawData);
+      } else {
+        throw new Error(`Proxy failed with status ${response.status}`);
+      }
+    } catch (proxyError) {
+      console.error("Proxy error:", proxyError);
+      throw proxyError;
     }
 
-    const prayerTimes = await response.json();
-    
-
-    if (prayerTimes.error) {
-      throw new Error(prayerTimes.error);
-    }
+    if (!prayerTimes) throw new Error("Failed to load prayer times");
 
     // Cache the result
     cachedData = prayerTimes;
@@ -61,20 +113,13 @@ export const fetchPrayerTimes = async (
     return prayerTimes;
   } catch (error) {
     console.error("Error fetching prayer times:", error);
-
-    // Return cached data if available, even if expired
-    if (cachedData) {
-      return cachedData;
-    }
-
-    // If no cache, throw error to be handled by component
+    if (cachedData) return cachedData;
     throw error;
   }
 };
 
 /**
  * Clear the prayer times cache
- * Useful for forcing a refresh
  */
 export const clearCache = () => {
   cachedData = null;
@@ -83,14 +128,11 @@ export const clearCache = () => {
 
 /**
  * Get fasting times (Sehri and Iftar)
- * @param {object} prayerTimes - Prayer times object from fetchPrayerTimes
- * @returns {object} - { sehri: {...}, iftar: {...} }
  */
 export const getFastingTimes = (prayerTimes) => {
   if (!prayerTimes) return null;
-
   return {
-    sehri: prayerTimes.imsak, // Time to stop eating (Imsak)
-    iftar: prayerTimes.maghrib, // Time to break fast (Maghrib)
+    sehri: prayerTimes.imsak,
+    iftar: prayerTimes.maghrib,
   };
 };

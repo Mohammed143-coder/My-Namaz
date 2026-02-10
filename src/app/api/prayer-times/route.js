@@ -26,14 +26,6 @@ export async function GET(request) {
     );
   }
 
-  // Debug info (safe version)
-  const keyDebug = {
-    length: apiKey.length,
-    prefix: apiKey.substring(0, 3) + "...",
-    suffix: "..." + apiKey.substring(apiKey.length - 3),
-    hasWhitespace: rawKey !== apiKey,
-  };
-
   // 2. Handle City/Country format
   if (!lat && !lon && city && country) {
     if (
@@ -65,41 +57,32 @@ export async function GET(request) {
   }
 
   try {
-    // Some APIs are sensitive to the trailing slash or parameter order
     const apiUrl = `https://islamicapi.com/api/v1/prayer-time/?lat=${lat}&lon=${lon}&method=${method}&school=${school}&api_key=${apiKey}`;
 
+    // Advanced "Stealth" headers to mimic a browser even more closely
     const response = await fetch(apiUrl, {
       method: "GET",
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        Accept: "application/json",
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+        Accept: "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.9",
         "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+        Referer: "https://islamicapi.com/",
+        Origin: "https://islamicapi.com",
       },
       cache: "no-store",
     });
 
     if (!response.ok) {
-      const rawText = await response.text().catch(() => "No response body");
-      let errorData = {};
-      try {
-        errorData = JSON.parse(rawText);
-      } catch (e) {
-        errorData = { raw: rawText };
-      }
-
+      // If blocked by Cloudflare (403), we return a specific status so the client knows to fallback
       return NextResponse.json(
         {
-          error:
-            errorData.message ||
-            `External API failed with status ${response.status}`,
+          error: "API Blocked",
           status: response.status,
-          apiResponse: errorData,
-          keyDebug: keyDebug,
-          diagnostics: {
-            urlBase: "https://islamicapi.com/api/v1/prayer-time/",
-            paramsUsed: { lat, lon, method, school },
-          },
+          message:
+            "Request blocked by provider. Client-side fallback should trigger.",
         },
         { status: response.status },
       );
@@ -135,11 +118,7 @@ export async function GET(request) {
     });
   } catch (error) {
     return NextResponse.json(
-      {
-        error: "Internal Server Error",
-        message: error.message,
-        keyDebug: keyDebug,
-      },
+      { error: "Internal Server Error", message: error.message },
       { status: 500 },
     );
   }

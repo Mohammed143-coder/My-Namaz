@@ -9,7 +9,8 @@ export async function GET(request) {
   const method = searchParams.get("method") || "1";
   const school = searchParams.get("school") || "1";
 
-  const apiKey = process.env.ISLAMICAPI_API_KEY;
+  // Sanitize the API key using .trim() to avoid accidental whitespace from Vercel
+  const apiKey = (process.env.ISLAMICAPI_API_KEY || "").trim();
 
   // 1. Check for API Key
   if (!apiKey) {
@@ -27,7 +28,6 @@ export async function GET(request) {
 
   // 2. Handle City/Country format (Mapping known cities to lat/lon)
   if (!lat && !lon && city && country) {
-    // Specifically handle the Krishnagiri request provided by the user
     if (
       city.toLowerCase() === "krishnagiri" &&
       country.toLowerCase() === "india"
@@ -35,8 +35,6 @@ export async function GET(request) {
       lat = "12.5303521";
       lon = "78.2006153";
     } else {
-      // If other cities are needed, they should ideally use lat/lon
-      // or a geocoding service. For now, we strictly support the user's specific request.
       return NextResponse.json(
         {
           error:
@@ -61,7 +59,14 @@ export async function GET(request) {
   try {
     const apiUrl = `https://islamicapi.com/api/v1/prayer-time/?lat=${lat}&lon=${lon}&method=${method}&school=${school}&api_key=${apiKey}`;
 
-    const response = await fetch(apiUrl);
+    // Adding User-Agent to avoid 403 Forbidden from some API WAFs
+    const response = await fetch(apiUrl, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        Accept: "application/json",
+      },
+    });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -70,6 +75,9 @@ export async function GET(request) {
           error:
             errorData.message ||
             `External API failed with status ${response.status}`,
+          status: response.status,
+          debug:
+            "If you get 403, check if your IslamicAPI key allows requests from server environments like Vercel.",
         },
         { status: response.status },
       );
